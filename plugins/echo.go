@@ -9,7 +9,7 @@ func init() {
 		Name: "复读",
 		Help: "复读...",
 	})
-	en.AddWord(func(ctx *c.CTX) {
-		ctx.Send(c.Text(ctx.Mess.Content.Text[17:]))
-	}, "复读")
+	en.AddRex(func(ctx *c.CTX) {
+		ctx.Send(c.Text(ctx.Being.Rex[1]))
+	}, "^复读(.*)")
 }
