@@ -12,6 +12,7 @@ import (
 
 	//导入插件
 	_ "github.com/lianhong2758/RosmBot/plugins/test"
+	_ "github.com/lianhong2758/RosmBot/plugins/chatgpt"
 )
 
 // 初始化

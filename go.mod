@@ -2,11 +2,21 @@ module github.com/lianhong2758/RosmBot
 
 go 1.20
 
-require github.com/gin-gonic/gin v1.9.1
+require (
+	github.com/FloatTech/floatbox v0.0.0-20230331064925-9af336a84944
+	github.com/FloatTech/ttl v0.0.0-20220715042055-15612be72f5b
+	github.com/gin-gonic/gin v1.9.1
+)
 
 require (
+	github.com/RomiChan/syncx v0.0.0-20221202055724-5f842c53020e // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+	github.com/fumiama/cron v1.3.0 // indirect
+	github.com/fumiama/go-base16384 v1.6.4 // indirect
+	github.com/fumiama/go-registry v0.2.6 // indirect
+	github.com/fumiama/go-simple-protobuf v0.1.0 // indirect
+	github.com/fumiama/gofastTEA v0.0.10 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
@@ -19,7 +29,9 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/pbnjay/memory v0.0.0-20210728143218-7b4eea64cf58 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect

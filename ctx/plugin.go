@@ -2,7 +2,10 @@ package ctx
 
 import (
 	"log"
+	"os"
 	"regexp"
+
+	"github.com/FloatTech/floatbox/file"
 )
 
 // 插件注册
@@ -16,6 +19,10 @@ var caseRegexp = map[*regexp.Regexp]func(c *CTX){}
 
 func Register(pluginName string, p *PluginData) *PluginData {
 	plugins[pluginName] = p
+	if file.IsNotExist(p.DataFolder) && p.DataFolder != "" {
+		_ = os.MkdirAll("data/"+p.DataFolder, 0755)
+	}
+	plugins[pluginName].DataFolder = "data/" + p.DataFolder + "/"
 	return plugins[pluginName]
 }
 
@@ -34,11 +41,13 @@ func (p *PluginData) AddRex(f func(c *CTX), rex string) {
 
 func Display() {
 	log.Println(caseAllWord)
+	log.Println(caseRegexp)
 }
 
 type PluginData struct {
-	Word []string
-	Rex  []*regexp.Regexp
-	Help string
-	Name string
+	Word       []string
+	Rex        []*regexp.Regexp
+	Help       string
+	Name       string
+	DataFolder string
 }

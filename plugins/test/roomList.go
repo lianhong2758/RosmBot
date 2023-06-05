@@ -1,4 +1,6 @@
-package plugins
+package test
+
+
 
 import (
 	c "github.com/lianhong2758/RosmBot/ctx"
