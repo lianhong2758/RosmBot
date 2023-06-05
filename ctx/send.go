@@ -19,12 +19,7 @@ const (
 )
 
 // 主动消息
-func (ctx *CTX) Send(msg any) {
-	m, ok := msg.(MessageSegment)
-	if !ok {
-		log.Println("[send-err]", "数据格式错误")
-		return
-	}
+func (ctx *CTX) Send(m MessageSegment) {
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": m.Type, "msg_content": m.Data})
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
@@ -48,10 +43,8 @@ func Text(text ...any) MessageSegment {
 	return MessageSegment{
 		Type: "MHY:Text",
 		Data: func() string {
-			data, _ := json.Marshal(H{
-				"content": H{
-					"text": fmt.Sprint(text...),
-				},
+			data, _ := json.Marshal(Content{
+				Text: fmt.Sprint(text...),
 			})
 			return string(data)
 		}(),
@@ -59,29 +52,53 @@ func Text(text ...any) MessageSegment {
 }
 
 // url为图片链接,必须直链,w,h为宽高
-func Image(url string, w, h int, text ...any) MessageSegment {
+func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 	return MessageSegment{
 		Type: "MHY:Text",
 		Data: func() string {
-			data, _ := json.Marshal(H{
-				"content": H{
-					"images": []any{H{
-						"size": H{
-							"width":  w,
-							"height": h,
-						},
-						"url":       url,
-						"file_size": 9999,
-					}},
-					"text":     fmt.Sprint(text...),
-					"entities": nil,
-				},
+			images := ImageStr{
+				URL: url,
+			}
+			if w != 0 {
+				images.Size.Width = w
+			}
+			if h != 0 {
+				images.Size.Height = h
+			}
+			if size != 0 {
+				images.FileSize = size
+			}
+			data, _ := json.Marshal(Content{
+				Text:   fmt.Sprint(text...),
+				Images: []ImageStr{images},
 			})
 			return string(data)
 		}(),
 	}
 }
 
+// url为图片链接,必须直链,w,h为宽高size大小,不需要项填0
+func Image(url string, w, h, size int) MessageSegment {
+	return MessageSegment{
+		Type: "MHY:Image",
+		Data: func() string {
+			content := Content{
+				ImageStr: ImageStr{URL: url},
+			}
+			if w != 0 {
+				content.Size.Width = w
+			}
+			if h != 0 {
+				content.Size.Height = h
+			}
+			if size != 0 {
+				content.FileSize = size
+			}
+			data, _ := json.Marshal(content)
+			return string(data)
+		}(),
+	}
+}
 func Link(url string, text ...any) MessageSegment {
 	t := fmt.Sprint(text...)
 	offset, lenght := 0, 0
@@ -116,4 +133,28 @@ func Link(url string, text ...any) MessageSegment {
 type MessageSegment struct {
 	Type string `json:"type"`
 	Data string `json:"data"`
+}
+
+// 消息模板
+type Content struct {
+	//图片
+	ImageStr
+	//文本
+	Text     string `json:"text,omitempty"`
+	Entities []struct {
+		Entity struct {
+			Type string `json:"type,omitempty"`
+		} `json:"entity,omitempty"`
+		Length int `json:"length,omitempty"`
+		Offset int `json:"offset,omitempty"`
+	} `json:"entities,omitempty"`
+	Images []ImageStr `json:"images,omitempty"`
+}
+type ImageStr struct {
+	URL      string `json:"url,omitempty"`
+	FileSize int    `json:"file_size,omitempty"`
+	Size     struct {
+		Height int `json:"height,omitempty"`
+		Width  int `json:"width,omitempty"`
+	} `json:"size,omitempty"`
 }
