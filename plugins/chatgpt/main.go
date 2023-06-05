@@ -4,8 +4,8 @@ import (
 	"strings"
 	"time"
 
-	c "github.com/lianhong2758/RosmBot/ctx"
 	"github.com/FloatTech/ttl"
+	c "github.com/lianhong2758/RosmBot/ctx"
 )
 
 type sessionKey struct {
@@ -36,6 +36,7 @@ func init() {
 			ctx.Send(c.Text("已清除上下文！"))
 			return
 		}
+		messages = cache.Get(key)
 		messages = append(messages, chatMessage{
 			Role:    "user",
 			Content: args,

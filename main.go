@@ -11,8 +11,8 @@ import (
 	"github.com/lianhong2758/RosmBot/zero"
 
 	//导入插件
-	_ "github.com/lianhong2758/RosmBot/plugins/test"
 	_ "github.com/lianhong2758/RosmBot/plugins/chatgpt"
+	_ "github.com/lianhong2758/RosmBot/plugins/test"
 )
 
 // 初始化
@@ -38,6 +38,7 @@ func main() {
 	r := gin.New() //初始化
 	log.Println("bot开始监听消息")
 	r.POST(config.EventPath, ctx.MessReceive)
+	r.GET("/file/*path", zero.GETImage)
 	r.Run("0.0.0.0:" + config.Port)
 }
 

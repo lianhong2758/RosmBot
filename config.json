@@ -5,6 +5,6 @@
         "bot_secret":"机器人sercet",
         "bot_name":"机器人名字"
     },
-    "eventpath":"回调路径,默认为/",
-    "port":"端口号,一般为80"
+    "eventpath":"/",
+    "port":"80"
 }

@@ -44,7 +44,6 @@ func Text(text ...any) MessageSegment {
 		Type: "MHY:Text",
 		Data: func() string {
 			data, _ := json.Marshal(H{"content": Content{Text: fmt.Sprint(text...)}})
-			log.Println(string(data))
 			return string(data)
 		}(),
 	}
