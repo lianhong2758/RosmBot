@@ -58,7 +58,8 @@ func Text(text ...any) MessageSegment {
 	}
 }
 
-func Image(url string, text ...any) MessageSegment {
+// url为图片链接,必须直链,w,h为宽高
+func Image(url string, w, h int, text ...any) MessageSegment {
 	return MessageSegment{
 		Type: "MHY:Text",
 		Data: func() string {
@@ -66,8 +67,8 @@ func Image(url string, text ...any) MessageSegment {
 				"content": H{
 					"images": []any{H{
 						"size": H{
-							"width":  2800,
-							"height": 3400,
+							"width":  w,
+							"height": h,
 						},
 						"url":       url,
 						"file_size": 9999,
