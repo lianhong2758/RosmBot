@@ -1,4 +1,4 @@
-module RosmBot
+module github.com/lianhong2758/RosmBot
 
 go 1.20
 

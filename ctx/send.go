@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"RosmBot/web"
-	"RosmBot/zero"
+	"github.com/lianhong2758/RosmBot/web"
+	"github.com/lianhong2758/RosmBot/zero"
 )
 
 type H = map[string]any

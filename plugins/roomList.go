@@ -1,7 +1,7 @@
 package plugins
 
 import (
-	c "RosmBot/ctx"
+	c "github.com/lianhong2758/RosmBot/ctx"
 )
 
 func init() {

@@ -3,7 +3,7 @@ package ctx
 import (
 	"net/http"
 
-	"RosmBot/web"
+	"github.com/lianhong2758/RosmBot/web"
 )
 
 const (

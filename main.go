@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"RosmBot/ctx"
 	"encoding/json"
 	"log"
 	"os"
 
-	_ "RosmBot/plugins"
-	"RosmBot/zero"
+	"github.com/lianhong2758/RosmBot/ctx"
+	_ "github.com/lianhong2758/RosmBot/plugins"
+	"github.com/lianhong2758/RosmBot/zero"
 )
 
 // 初始化

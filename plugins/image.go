@@ -3,8 +3,8 @@ package plugins
 import (
 	"net/http"
 
-	c "RosmBot/ctx"
-	"RosmBot/web"
+	c "github.com/lianhong2758/RosmBot/ctx"
+	"github.com/lianhong2758/RosmBot/web"
 )
 
 func init() {
