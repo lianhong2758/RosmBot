@@ -51,7 +51,6 @@ func MessReceive(c *gin.Context) {
 			Event: &info.Event.ExtendData.EventData.SendMessage,
 			Bot:   &info.Event.Robot.Template,
 		}
-		log.Println(plugins)
 		//消息处理
 		word := ctx.Mess.Content.Text[11:]
 		//关键词触发

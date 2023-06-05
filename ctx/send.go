@@ -43,9 +43,8 @@ func Text(text ...any) MessageSegment {
 	return MessageSegment{
 		Type: "MHY:Text",
 		Data: func() string {
-			data, _ := json.Marshal(Content{
-				Text: fmt.Sprint(text...),
-			})
+			data, _ := json.Marshal(H{"content": Content{Text: fmt.Sprint(text...)}})
+			log.Println(string(data))
 			return string(data)
 		}(),
 	}
@@ -68,10 +67,10 @@ func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 			if size != 0 {
 				images.FileSize = size
 			}
-			data, _ := json.Marshal(Content{
+			data, _ := json.Marshal(H{"content": Content{
 				Text:   fmt.Sprint(text...),
 				Images: []ImageStr{images},
-			})
+			}})
 			return string(data)
 		}(),
 	}
@@ -80,7 +79,7 @@ func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 // url为图片链接,必须直链,w,h为宽高size大小,不需要项填0
 func Image(url string, w, h, size int) MessageSegment {
 	return MessageSegment{
-		Type: "MHY:Image",
+		Type: "MHY:Text",
 		Data: func() string {
 			content := Content{
 				ImageStr: ImageStr{URL: url},
@@ -94,7 +93,7 @@ func Image(url string, w, h, size int) MessageSegment {
 			if size != 0 {
 				content.FileSize = size
 			}
-			data, _ := json.Marshal(content)
+			data, _ := json.Marshal(H{"content": content})
 			return string(data)
 		}(),
 	}

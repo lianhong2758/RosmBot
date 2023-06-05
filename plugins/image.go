@@ -17,6 +17,6 @@ func init() {
 		if err != nil {
 			ctx.Send(c.Text("获取图片失败"))
 		}
-		ctx.Send(c.Image("http://8.134.179.136/file/"+string(path), 0, 0, 0))
+		ctx.Send(c.ImageWithText("http://8.134.179.136/file/"+string(path), 0, 0, 0, "喵~"))
 	}, "随机壁纸", "兽耳", "星空", "白毛", "我要涩涩", "涩涩达咩", "白丝", "黑丝", "丝袜", "随机表情包", "cos", "盲盒", "开盲盒")
 }
