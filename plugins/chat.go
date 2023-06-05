@@ -12,5 +12,5 @@ func init() {
 	})
 	en.AddWord(func(ctx *c.CTX) {
 		ctx.Send(c.Text(zero.BotToken.BotName, "不在呢~"))
-	}, "", zero.BotToken.BotName)
+	}, "")
 }
