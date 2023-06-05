@@ -8,8 +8,10 @@ import (
 	"os"
 
 	"github.com/lianhong2758/RosmBot/ctx"
-	_ "github.com/lianhong2758/RosmBot/plugins"
 	"github.com/lianhong2758/RosmBot/zero"
+
+	//导入插件
+	_ "github.com/lianhong2758/RosmBot/plugins/test"
 )
 
 // 初始化
@@ -31,7 +33,7 @@ func init() {
 }
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 	r := gin.New() //初始化
 	log.Println("bot开始监听消息")
 	r.POST(config.EventPath, ctx.MessReceive)
