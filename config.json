@@ -1,9 +1,10 @@
 {
     "token":{
-        "villa_id":["tRZtpOP"],
-        "bot_id":"bot_cmmm01d64dsgai77r4m0",
-        "bot_secret":"bzq82p70vlioompvxyjaeijwnuxzdcdchbfqkihvguwkf",
-        "bot_name":"雪儿"
+        "villa_id":["大别野号,暂时可以不用写"],
+        "bot_id":"机器人id",
+        "bot_secret":"机器人sercet",
+        "bot_name":"机器人名字"
     },
-    "eventpath":"/"
+    "eventpath":"回调路径,默认为/",
+    "port":"端口号,一般为80"
 }

@@ -35,10 +35,11 @@ func main() {
 	r := gin.New() //初始化
 	log.Println("bot开始监听消息")
 	r.POST(config.EventPath, ctx.MessReceive)
-	r.Run("0.0.0.0:80")
+	r.Run("0.0.0.0:" + config.Port)
 }
 
 type mysCFG struct {
 	BotToken  zero.Token `json:"token"`
 	EventPath string     `json:"eventpath"`
+	Port      string     `json:"port"`
 }
