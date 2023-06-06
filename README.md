@@ -10,30 +10,25 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
 2在gin框架中合并代码
 
     "github.com/lianhong2758/RosmBot/ctx"
-	_ "github.com/lianhong2758/RosmBot/plugins"
 	"github.com/lianhong2758/RosmBot/zero"
-    // 初始化
-    var config mysCFG
 
-    func init() {
+	//导入插件
+	_ "github.com/lianhong2758/RosmBot/plugins/chatgpt"
+	_ "github.com/lianhong2758/RosmBot/plugins/test"
+    // 初始化
+	func init() {
 	f, err := os.ReadFile("config.json")
 	if err != nil {
 		panic(err)
 	}
-	err = json.Unmarshal(f, &config)
+	err = json.Unmarshal(f, &zero.MYSconfig)
 	if err != nil {
 		panic(err)
 	}
-	zero.BotToken = &config.BotToken
-	if config.BotToken.BotID == "" || config.BotToken.BotSecret == "" {
+	if zero.MYSconfig.BotToken.BotID == "" || zero.MYSconfig.BotToken.BotSecret == "" {
 		log.Fatalln("[init]未设置bot信息")
-	    }
-    }
-
-    type mysCFG struct {
-	    BotToken  zero.Token `json:"token"`
-	    EventPath string     `json:"eventpath"`
-    }
+	}
+	}
     func main(){
      ...
         r.POST(config.EventPath, ctx.MessReceive)

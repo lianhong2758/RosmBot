@@ -64,18 +64,18 @@ func init() {
 	}, `^(?:chatgpt|//)([\s\S]*)$`)
 
 	en.AddRex(func(ctx *c.CTX) {
-		apiKey = ctx.State["regex_matched"].([]string)[1]
+		apiKey = ctx.Being.Rex[1]
 		f, err := os.Create(apikeyfile)
 		if err != nil {
-			ctx.SendChain(message.Text("ERROR: ", err))
+			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
 		defer f.Close()
 		_, err = f.WriteString(apiKey)
 		if err != nil {
-			ctx.SendChain(message.Text("ERROR: ", err))
+			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		ctx.SendChain(message.Text("设置成功"))
+		ctx.Send(c.Text("设置成功"))
 	}, `^设置\s*OpenAI\s*apikey\s*(.*)$`)
 }
