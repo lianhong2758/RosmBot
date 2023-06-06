@@ -16,34 +16,25 @@ import (
 )
 
 // 初始化
-var config mysCFG
-
 func init() {
 	f, err := os.ReadFile("config.json")
 	if err != nil {
 		panic(err)
 	}
-	err = json.Unmarshal(f, &config)
+	err = json.Unmarshal(f, &zero.MYSconfig)
 	if err != nil {
 		panic(err)
 	}
-	zero.BotToken = &config.BotToken
-	if config.BotToken.BotID == "" || config.BotToken.BotSecret == "" {
+	if zero.MYSconfig.BotToken.BotID == "" || zero.MYSconfig.BotToken.BotSecret == "" {
 		log.Fatalln("[init]未设置bot信息")
 	}
 }
 
 func main() {
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.New() //初始化
 	log.Println("bot开始监听消息")
-	r.POST(config.EventPath, ctx.MessReceive)
+	r.POST(zero.MYSconfig.EventPath, ctx.MessReceive)
 	r.GET("/file/*path", zero.GETImage)
-	r.Run("0.0.0.0:" + config.Port)
-}
-
-type mysCFG struct {
-	BotToken  zero.Token `json:"token"`
-	EventPath string     `json:"eventpath"`
-	Port      string     `json:"port"`
+	r.Run("0.0.0.0:" + zero.MYSconfig.Port)
 }

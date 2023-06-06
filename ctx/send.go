@@ -32,8 +32,8 @@ func (ctx *CTX) Send(m MessageSegment) {
 }
 
 func (ctx *CTX) makeHeard(req *http.Request) {
-	req.Header.Add("x-rpc-bot_id", zero.BotToken.BotID)
-	req.Header.Add("x-rpc-bot_secret", zero.BotToken.BotSecret)
+	req.Header.Add("x-rpc-bot_id", zero.MYSconfig.BotToken.BotID)
+	req.Header.Add("x-rpc-bot_secret", zero.MYSconfig.BotToken.BotSecret)
 	req.Header.Add("x-rpc-bot_villa_id", strconv.Itoa(ctx.Being.VillaID))
 	req.Header.Add("Content-Type", "application/json")
 }

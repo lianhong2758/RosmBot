@@ -8,6 +8,7 @@ import (
 
 	c "github.com/lianhong2758/RosmBot/ctx"
 	"github.com/lianhong2758/RosmBot/web"
+	"github.com/lianhong2758/RosmBot/zero"
 )
 
 const (
@@ -95,6 +96,6 @@ func init() {
 			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		ctx.Send(c.ImageWithText("http://8.134.179.136/file/image/"+timestamp+".jpg", 0, 0, 0, "喵~"))
+		ctx.Send(c.ImageWithText(zero.MYSconfig.Host+"/file/image/"+timestamp+".jpg", 0, 0, 0, "喵~"))
 	}, "随机壁纸", "兽耳", "星空", "白毛", "我要涩涩", "涩涩达咩", "白丝", "黑丝", "丝袜", "随机表情包", "cos", "盲盒", "开盲盒")
 }
