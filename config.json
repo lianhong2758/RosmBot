@@ -1,6 +1,6 @@
 {
     "token":{
-        "villa_id":["大别野号,暂时可以不用写"],
+        "villa_id":[],
         "bot_id":"机器人id",
         "bot_secret":"机器人sercet",
         "bot_name":"机器人名字"
