@@ -12,4 +12,7 @@ func init() {
 	en.AddRex(func(ctx *c.CTX) {
 		ctx.Send(c.Text(ctx.Being.Rex[1]))
 	}, "^复读(.*)")
+	en.AddRex(func(ctx *c.CTX) {
+		ctx.Send(c.ImageWithText(ctx.Being.Rex[1], 0, 0, 0, "喵~"))
+	}, "^复图(.*)")
 }
