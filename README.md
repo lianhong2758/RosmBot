@@ -1,8 +1,11 @@
-# RosmBot
-米游社官方接口Bot,golang编写
+# RosmBot(迷迭香Bot)
+RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
 # 使用方法
 
-1直接运行main.go即可
+1直接运行
+
+	配置config
+	运行run.bat即可
 
 2在gin框架中合并代码
 
@@ -34,6 +37,7 @@
     func main(){
      ...
         r.POST(config.EventPath, ctx.MessReceive)
+		r.GET("/file/*path", zero.GETImage)
      ...
     }
 之后把config.json指定目录即可

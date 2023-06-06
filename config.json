@@ -6,5 +6,6 @@
         "bot_name":"机器人名字"
     },
     "eventpath":"/",
-    "port":"80"
+    "port":"80",
+    "host":"..."
 }
