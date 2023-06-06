@@ -1,9 +1,11 @@
 package chatgpt
 
 import (
+	"os"
 	"strings"
 	"time"
 
+	"github.com/FloatTech/floatbox/file"
 	"github.com/FloatTech/ttl"
 	c "github.com/lianhong2758/RosmBot/ctx"
 )
@@ -24,6 +26,14 @@ func init() {
 		Help:       "-@bot //|chatgpt [对话内容]\n",
 		DataFolder: "chatgpt",
 	})
+	apikeyfile := en.DataFolder + "apikey.txt"
+	if file.IsExist(apikeyfile) {
+		apikey, err := os.ReadFile(apikeyfile)
+		if err != nil {
+			panic(err)
+		}
+		apiKey = string(apikey)
+	}
 	en.AddRex(func(ctx *c.CTX) {
 		var messages []chatMessage
 		args := ctx.Being.Rex[1]
@@ -52,4 +62,20 @@ func init() {
 		cache.Set(key, messages)
 		ctx.Send(c.Text(reply.Content, "\n本次消耗token: ", resp.Usage.PromptTokens, "+", resp.Usage.CompletionTokens, "=", resp.Usage.TotalTokens))
 	}, `^(?:chatgpt|//)([\s\S]*)$`)
+
+	en.AddRex(func(ctx *c.CTX) {
+		apiKey = ctx.State["regex_matched"].([]string)[1]
+		f, err := os.Create(apikeyfile)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		defer f.Close()
+		_, err = f.WriteString(apiKey)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		ctx.SendChain(message.Text("设置成功"))
+	}, `^设置\s*OpenAI\s*apikey\s*(.*)$`)
 }

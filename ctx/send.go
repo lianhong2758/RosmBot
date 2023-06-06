@@ -10,6 +10,7 @@ import (
 
 	"github.com/lianhong2758/RosmBot/web"
 	"github.com/lianhong2758/RosmBot/zero"
+	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
 type H = map[string]any
@@ -44,7 +45,7 @@ func Text(text ...any) MessageSegment {
 		Type: "MHY:Text",
 		Data: func() string {
 			data, _ := json.Marshal(H{"content": Content{Text: fmt.Sprint(text...)}})
-			return string(data)
+			return helper.BytesToString(data)
 		}(),
 	}
 }
@@ -70,7 +71,7 @@ func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 				Text:   fmt.Sprint(text...),
 				Images: []ImageStr{images},
 			}})
-			return string(data)
+			return helper.BytesToString(data)
 		}(),
 	}
 }
@@ -93,7 +94,7 @@ func Image(url string, w, h, size int) MessageSegment {
 				content.FileSize = size
 			}
 			data, _ := json.Marshal(H{"content": content})
-			return string(data)
+			return helper.BytesToString(data)
 		}(),
 	}
 }
@@ -123,7 +124,7 @@ func Link(url string, text ...any) MessageSegment {
 					},
 				},
 			})
-			return string(data)
+			return helper.BytesToString(data)
 		}(),
 	}
 }

@@ -6,6 +6,7 @@ require (
 	github.com/FloatTech/floatbox v0.0.0-20230331064925-9af336a84944
 	github.com/FloatTech/ttl v0.0.0-20220715042055-15612be72f5b
 	github.com/gin-gonic/gin v1.9.1
+	github.com/wdvxdr1123/ZeroBot v1.6.11
 )
 
 require (
