@@ -37,7 +37,7 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 		}
 	}
 	var objectStr string
-	if msgContent.Text == "" {
+	if msgContent.Text != "" {
 		objectStr = "MHY:Text"
 	} else {
 		objectStr = "MHY:Image"
