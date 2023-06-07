@@ -10,6 +10,6 @@ func init() {
 		Help: "测试",
 	})
 	en.AddWord(func(ctx *c.CTX) {
-		ctx.Send(c.Text("你好"), ctx.AT(114541), c.Text("你好"))
+		ctx.Send(c.Text("你好"), ctx.AT(76257069), c.Link("www.baidu.com", "百度一下"), c.ATAll(), ctx.RoomLink("23648"), c.Text("[爱心]"))
 	}, "测试")
 }

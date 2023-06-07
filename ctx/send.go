@@ -26,7 +26,7 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 		switch message.Type {
 		case "text":
 			msgContent.Text += message.Data["text"].(string)
-		case "at":
+		case "at", "atbot", "link", "villa_room_link":
 			t := message.Data["entities"].(Entities)
 			t.Offset = len([]rune(msgContent.Text))
 			msgContent.Entities = append(msgContent.Entities, t)
@@ -34,6 +34,8 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 		case "imagewithtext":
 			msgContent.Text += message.Data["text"].(string)
 			msgContent.Images = append(msgContent.Images, message.Data["imagestr"].(ImageStr))
+		case "image":
+			msgContent.ImageStr = message.Data["image"].(ImageStr)
 		}
 	}
 	var objectStr string
@@ -72,7 +74,7 @@ func Text(text ...any) MessageSegment {
 // at用户
 func (ctx *CTX) AT(uid uint64) MessageSegment {
 	user, _ := ctx.GetUserData(uid)
-	name := user.Data.Member.Basic.Nickname
+	name := "@" + user.Data.Member.Basic.Nickname + " "
 	return MessageSegment{
 		Type: "at",
 		Data: H{
@@ -80,6 +82,62 @@ func (ctx *CTX) AT(uid uint64) MessageSegment {
 			"entities": Entities{
 				Length: len([]rune(name)),
 				Entity: H{"type": "mentioned_user", "user_id": strconv.Itoa(int(uid))},
+			},
+		},
+	}
+}
+
+// atbot
+func ATBot(botid, botname string) MessageSegment {
+	name := "@" + botname + " "
+	return MessageSegment{
+		Type: "atbot",
+		Data: H{
+			"text": name,
+			"entities": Entities{
+				Length: len([]rune(name)),
+				Entity: H{"type": "mentioned_robot", "bot_id": botid},
+			},
+		},
+	}
+}
+
+// at all
+func ATAll() MessageSegment {
+	name := "@全体成员 "
+	return MessageSegment{
+		Type: "atbot",
+		Data: H{
+			"text": name,
+			"entities": Entities{
+				Length: len([]rune(name)),
+				Entity: H{"type": "mention_all"},
+			},
+		},
+	}
+}
+
+// goto the room
+func (ctx *CTX) RoomLink(roomid string) MessageSegment {
+	r, _ := ctx.GetRoomList()
+	RoomName := roomid
+GroupFor:
+	for _, v := range r.Data.List {
+		for _, vv := range v.RoomList {
+			if vv.RoomID == roomid {
+				RoomName = vv.RoomName
+				break GroupFor
+			}
+		}
+	}
+	name := "#" + RoomName + " "
+	return MessageSegment{
+		Type: "villa_room_link",
+		Data: H{
+			"text": name,
+			"entities": Entities{
+				Length: len([]rune(name)),
+				Entity: H{"type": "villa_room_link", "villa_id": strconv.Itoa(ctx.Being.VillaID), "room_id": roomid},
 			},
 		},
 	}
@@ -109,58 +167,41 @@ func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 }
 
 // url为图片链接,必须直链,w,h为宽高size大小,不需要项填0
-/*func Image(url string, w, h, size int) MessageSegment {
-	return MessageSegment{
-		Type: "MHY:Text",
-		Data: func() string {
-			content := Content{
-				ImageStr: ImageStr{URL: url},
-			}
-			if w != 0 {
-				content.Size.Width = w
-			}
-			if h != 0 {
-				content.Size.Height = h
-			}
-			if size != 0 {
-				content.FileSize = size
-			}
-			data, _ := json.Marshal(H{"content": content})
-			return helper.BytesToString(data)
-		}(),
+func Image(url string, w, h, size int) MessageSegment {
+	images := ImageStr{
+		URL: url,
 	}
-}*/
+	if w != 0 {
+		images.Size.Width = w
+	}
+	if h != 0 {
+		images.Size.Height = h
+	}
+	if size != 0 {
+		images.FileSize = size
+	}
+	return MessageSegment{
+		Type: "imagewithtext",
+		Data: H{
+			"image": images,
+		},
+	}
+}
 
-/*func Link(url string, text ...any) MessageSegment {
+// 蓝色跳转链接
+func Link(url string, text ...any) MessageSegment {
 	t := fmt.Sprint(text...)
-	offset, lenght := 0, 0
-	for i := 0; i <= len([]rune(t))-len([]rune(url)); i++ {
-		if string(t[i:i+len(url)]) == url {
-			offset = i
-			lenght = len([]rune(url))
-			break
-		}
-	}
 	return MessageSegment{
-		Type: "MHY:Text",
-		Data: func() string {
-			data, _ := json.Marshal(H{
-				"content": H{
-					"text": t,
-					"entities": []any{H{
-						"offset": offset,
-						"length": lenght,
-						"entity": H{
-							"type": "link",
-							"url":  url,
-						}},
-					},
-				},
-			})
-			return helper.BytesToString(data)
-		}(),
+		Type: "link",
+		Data: H{
+			"text": t,
+			"entities": Entities{
+				Length: len([]rune(t)),
+				Entity: H{"type": "link", "url": url},
+			},
+		},
 	}
-}*/
+}
 
 type Message []MessageSegment
 type MessageSegment struct {
