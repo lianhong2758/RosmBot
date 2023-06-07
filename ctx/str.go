@@ -5,7 +5,7 @@ import ()
 // 回调的请求结构
 type infoSTR struct {
 	Event struct {
-		Robot struct { 
+		Robot struct {
 			Template tem `json:"template"`
 			VillaID  int `json:"villa_id"`
 		} `json:"robot"`
@@ -131,6 +131,10 @@ type sendState struct {
 	} `json:"data"`
 }
 
+type ApiCode struct {
+	Retcode int    `json:"retcode"`
+	Message string `json:"message"`
+}
 type being struct {
 	RoomID  int
 	VillaID int

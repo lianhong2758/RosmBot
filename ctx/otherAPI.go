@@ -3,6 +3,7 @@ package ctx
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/lianhong2758/RosmBot/web"
@@ -31,6 +32,16 @@ func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 	}
 	r = new(UserData)
 	err = json.Unmarshal(data, r)
+	return
+}
+func (ctx *CTX) DeleteUser(uid uint64) (err error) {
+	data, _ := json.Marshal(H{"uid": uid})
+	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	var r ApiCode
+	_ = json.Unmarshal(data, &r)
+	if r.Retcode != 0 {
+		return errors.New(r.Message)
+	}
 	return
 }
 
