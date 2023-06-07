@@ -181,7 +181,7 @@ func Image(url string, w, h, size int) MessageSegment {
 		images.FileSize = size
 	}
 	return MessageSegment{
-		Type: "imagewithtext",
+		Type: "image",
 		Data: H{
 			"image": images,
 		},
