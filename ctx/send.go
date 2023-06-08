@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"unicode/utf16"
 
 	"github.com/lianhong2758/RosmBot/web"
 	"github.com/lianhong2758/RosmBot/zero"
@@ -28,7 +29,7 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 			msgContent.Text += message.Data["text"].(string)
 		case "at", "atbot", "link", "villa_room_link":
 			t := message.Data["entities"].(Entities)
-			t.Offset = len([]rune(msgContent.Text))
+			t.Offset = len(utf16.Encode([]rune(msgContent.Text)))
 			msgContent.Entities = append(msgContent.Entities, t)
 			msgContent.Text += message.Data["text"].(string)
 		case "imagewithtext":
@@ -80,7 +81,7 @@ func (ctx *CTX) AT(uid uint64) MessageSegment {
 		Data: H{
 			"text": name,
 			"entities": Entities{
-				Length: len([]rune(name)),
+				Length: len(utf16.Encode([]rune(name))),
 				Entity: H{"type": "mentioned_user", "user_id": strconv.Itoa(int(uid))},
 			},
 		},
@@ -95,7 +96,7 @@ func ATBot(botid, botname string) MessageSegment {
 		Data: H{
 			"text": name,
 			"entities": Entities{
-				Length: len([]rune(name)),
+				Length: len(utf16.Encode([]rune(name))),
 				Entity: H{"type": "mentioned_robot", "bot_id": botid},
 			},
 		},
@@ -110,7 +111,7 @@ func ATAll() MessageSegment {
 		Data: H{
 			"text": name,
 			"entities": Entities{
-				Length: len([]rune(name)),
+				Length: len(utf16.Encode([]rune(name))),
 				Entity: H{"type": "mention_all"},
 			},
 		},
@@ -136,7 +137,7 @@ GroupFor:
 		Data: H{
 			"text": name,
 			"entities": Entities{
-				Length: len([]rune(name)),
+				Length: len(utf16.Encode([]rune(name))),
 				Entity: H{"type": "villa_room_link", "villa_id": strconv.Itoa(ctx.Being.VillaID), "room_id": roomid},
 			},
 		},
@@ -196,7 +197,7 @@ func Link(url string, text ...any) MessageSegment {
 		Data: H{
 			"text": t,
 			"entities": Entities{
-				Length: len([]rune(t)),
+				Length: len(utf16.Encode([]rune(t))),
 				Entity: H{"type": "link", "url": url},
 			},
 		},
