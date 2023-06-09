@@ -34,8 +34,21 @@ func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 	err = json.Unmarshal(data, r)
 	return
 }
+
 func (ctx *CTX) DeleteUser(uid uint64) (err error) {
 	data, _ := json.Marshal(H{"uid": uid})
+	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	var r ApiCode
+	_ = json.Unmarshal(data, &r)
+	if r.Retcode != 0 {
+		return errors.New(r.Message)
+	}
+	return
+}
+
+// 消息id,房间id,发送时间
+func (ctx *CTX) Recall(msgid, string, roomid uint64, msgtime int64) (err error) {
+	data, _ := json.Marshal(H{"msg_uid": msgid, "room_id": roomid, "msg_time": msgtime})
 	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
 	var r ApiCode
 	_ = json.Unmarshal(data, &r)

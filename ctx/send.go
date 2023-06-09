@@ -23,20 +23,38 @@ const (
 // 主动消息
 func (ctx *CTX) Send(m ...MessageSegment) {
 	msgContent := new(Content)
+	msgContentInfo := H{}
 	for _, message := range m {
 		switch message.Type {
 		case "text":
 			msgContent.Text += message.Data["text"].(string)
-		case "at", "atbot", "link", "villa_room_link":
+		case "link", "villa_room_link":
 			t := message.Data["entities"].(Entities)
 			t.Offset = len(utf16.Encode([]rune(msgContent.Text)))
 			msgContent.Entities = append(msgContent.Entities, t)
 			msgContent.Text += message.Data["text"].(string)
+		case "at", "atbot":
+			t := message.Data["entities"].(Entities)
+			t.Offset = len(utf16.Encode([]rune(msgContent.Text)))
+			msgContent.Entities = append(msgContent.Entities, t)
+			msgContent.Text += message.Data["text"].(string)
+			otherUID := msgContentInfo["mentionedInfo"].(MentionedInfoStr).UserIDList
+			otherUID = append(otherUID, message.Data["uid"].(string))
+			msgContentInfo["mentionedInfo"] = MentionedInfoStr{Type: 2, UserIDList: otherUID}
+		case "atall":
+			t := message.Data["entities"].(Entities)
+			t.Offset = len(utf16.Encode([]rune(msgContent.Text)))
+			msgContent.Entities = append(msgContent.Entities, t)
+			msgContent.Text += message.Data["text"].(string)
+			msgContentInfo["mentionedInfo"] = MentionedInfoStr{Type: 1}
 		case "imagewithtext":
 			msgContent.Text += message.Data["text"].(string)
 			msgContent.Images = append(msgContent.Images, message.Data["imagestr"].(ImageStr))
 		case "image":
 			msgContent.ImageStr = message.Data["image"].(ImageStr)
+		case "reply":
+			id, time := message.Data["id"].(string), message.Data["time"].(int64)
+			msgContentInfo["quote"] = H{"original_message_id": id, "original_message_send_time": time, "quoted_message_id": id, "quoted_message_send_time": time}
 		}
 	}
 	var objectStr string
@@ -45,7 +63,8 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 	} else {
 		objectStr = "MHY:Image"
 	}
-	contentStr, _ := json.Marshal(H{"content": msgContent})
+	msgContentInfo["content"] = msgContent
+	contentStr, _ := json.Marshal(msgContentInfo)
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": objectStr, "msg_content": helper.BytesToString(contentStr)})
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
@@ -80,6 +99,7 @@ func (ctx *CTX) AT(uid uint64) MessageSegment {
 		Type: "at",
 		Data: H{
 			"text": name,
+			"uid":  strconv.Itoa(int(uid)),
 			"entities": Entities{
 				Length: len(utf16.Encode([]rune(name))),
 				Entity: H{"type": "mentioned_user", "user_id": strconv.Itoa(int(uid))},
@@ -107,7 +127,7 @@ func ATBot(botid, botname string) MessageSegment {
 func ATAll() MessageSegment {
 	name := "@全体成员 "
 	return MessageSegment{
-		Type: "atbot",
+		Type: "atall",
 		Data: H{
 			"text": name,
 			"entities": Entities{
@@ -204,6 +224,16 @@ func Link(url string, text ...any) MessageSegment {
 	}
 }
 
+func Reply(id string, time int64) MessageSegment {
+	return MessageSegment{
+		Type: "reply",
+		Data: H{
+			"id":   id,
+			"time": time,
+		},
+	}
+}
+
 type Message []MessageSegment
 type MessageSegment struct {
 	Type string `json:"type"`
@@ -231,4 +261,8 @@ type Entities struct {
 	Entity H   `json:"entity,omitempty"`
 	Length int `json:"length,omitempty"`
 	Offset int `json:"offset,omitempty"`
+}
+type MentionedInfoStr struct {
+	Type       int      `json:"type"`
+	UserIDList []string `json:"userIdList"`
 }
