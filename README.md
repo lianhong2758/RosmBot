@@ -4,7 +4,6 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
 
 1直接运行
 
-	配置config
 	运行run.bat即可
 
 2在gin框架中合并代码
@@ -42,7 +41,8 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
 		r.GET("/file/*path", zero.GETImage)
      ...
     }
-之后把config.json指定目录即可
+
+之后运行即可
 
 # 特别鸣谢
 ZeroBot提供部分代码借鉴
