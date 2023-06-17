@@ -43,3 +43,6 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
      ...
     }
 之后把config.json指定目录即可
+
+# 特别鸣谢
+ZeroBot提供部分代码借鉴
