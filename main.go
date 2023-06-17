@@ -43,5 +43,5 @@ func main() {
 	log.Println("bot开始监听消息")
 	r.POST(zero.MYSconfig.EventPath, ctx.MessReceive)
 	r.GET("/file/*path", zero.GETImage)
-	r.Run("0.0.0.0:" + zero.MYSconfig.Port)
+	r.Run(zero.MYSconfig.Port)
 }

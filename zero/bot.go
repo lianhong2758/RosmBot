@@ -2,7 +2,12 @@ package zero
 
 import ()
 
-var MYSconfig MYSCFG
+var MYSconfig = MYSCFG{
+	BotToken:  Token{},
+	EventPath: "/",
+	Port:      "0.0.0.0:80",
+	Host:      "127.0.0.1:80",
+}
 
 type Token struct {
 	VillaID   []int  `json:"villa_id"`
