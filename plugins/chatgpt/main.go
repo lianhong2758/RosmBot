@@ -60,7 +60,7 @@ func init() {
 		reply.Content = strings.TrimSpace(reply.Content)
 		messages = append(messages, reply)
 		cache.Set(key, messages)
-		ctx.Send(c.Text(reply.Content, "\n本次消耗token: ", resp.Usage.PromptTokens, "+", resp.Usage.CompletionTokens, "=", resp.Usage.TotalTokens))
+		ctx.Send(ctx.Reply(), c.Text(reply.Content, "\n本次消耗token: ", resp.Usage.PromptTokens, "+", resp.Usage.CompletionTokens, "=", resp.Usage.TotalTokens))
 	}, `^(?:chatgpt|//)([\s\S]*)$`)
 
 	en.AddRex(func(ctx *c.CTX) {

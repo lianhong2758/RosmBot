@@ -251,12 +251,21 @@ func Link(url string, text ...any) MessageSegment {
 	}
 }
 
-func Reply(id string, time int64) MessageSegment {
+func ReplyOther(id string, time int64) MessageSegment {
 	return MessageSegment{
 		Type: "reply",
 		Data: H{
 			"id":   id,
 			"time": time,
+		},
+	}
+}
+func (ctx *CTX) Reply() MessageSegment {
+	return MessageSegment{
+		Type: "reply",
+		Data: H{
+			"id":   ctx.Event.MsgUID,
+			"time": ctx.Event.SendAt,
 		},
 	}
 }
