@@ -102,17 +102,18 @@ func Text(text ...any) MessageSegment {
 }
 
 // at用户
-func (ctx *CTX) AT(uid uint64) MessageSegment {
-	user, _ := ctx.GetUserData(uid)
+func (ctx *CTX) AT(uid string) MessageSegment {
+	intuid, _ := strconv.Atoi(uid)
+	user, _ := ctx.GetUserData(uint64(intuid))
 	name := "@" + user.Data.Member.Basic.Nickname + " "
 	return MessageSegment{
 		Type: "at",
 		Data: H{
 			"text": name,
-			"uid":  strconv.Itoa(int(uid)),
+			"uid":  uid,
 			"entities": Entities{
 				Length: len(utf16.Encode([]rune(name))),
-				Entity: H{"type": "mentioned_user", "user_id": strconv.Itoa(int(uid))},
+				Entity: H{"type": "mentioned_user", "user_id": uid},
 			},
 		},
 	}
