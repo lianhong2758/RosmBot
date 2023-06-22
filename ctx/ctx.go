@@ -24,7 +24,7 @@ func MessReceive(c *gin.Context) {
 	//调用消息处理件,触发中心
 	switch info.Event.Type {
 	default:
-		log.Println(info.Event.ExtendData.EventData) 
+		log.Println(info.Event.ExtendData.EventData)
 		return
 	case 1:
 		log.Printf("[info] (入群事件) %s(%d)", info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
@@ -35,6 +35,7 @@ func MessReceive(c *gin.Context) {
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
 				RoomID:  welcomeRoom, //欢迎大厅
+				User:    &user{ID: strconv.Itoa(info.Event.ExtendData.EventData.JoinVilla.JoinUID), Name: info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname},
 			},
 			Event: &info.Event.ExtendData.EventData.SendMessage,
 			Bot:   &info.Event.Robot.Template,
@@ -43,7 +44,7 @@ func MessReceive(c *gin.Context) {
 			ctx.Send(Text(info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, "欢迎光临", zero.MYSconfig.BotToken.BotName, "的小屋~"))
 		}
 	case 2:
-		u := new(user)
+		u := new(mess)
 		err = json.Unmarshal([]byte(info.Event.ExtendData.EventData.SendMessage.Content), u)
 		if err != nil {
 			log.Println("[info-err]", err)
@@ -56,6 +57,7 @@ func MessReceive(c *gin.Context) {
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
 				RoomID:  info.Event.ExtendData.EventData.SendMessage.RoomID,
+				User:    &u.User,
 			},
 			Event: &info.Event.ExtendData.EventData.SendMessage,
 			Bot:   &info.Event.Robot.Template,

@@ -76,6 +76,16 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 
 }
 
+// 改变发送的房间id
+func (ctx *CTX) ChangeSendRoom(roomid int) {
+	ctx.Being.RoomID = roomid
+}
+
+// 改变发送的大别野id
+func (ctx *CTX) ChangeSendVilla(villaid, roomid int) {
+	ctx.Being.VillaID, ctx.Being.RoomID = villaid, roomid
+}
+
 func (ctx *CTX) makeHeard(req *http.Request) {
 	req.Header.Add("x-rpc-bot_id", zero.MYSconfig.BotToken.BotID)
 	req.Header.Add("x-rpc-bot_secret", zero.MYSconfig.BotToken.BotSecret)
@@ -232,37 +242,4 @@ func Reply(id string, time int64) MessageSegment {
 			"time": time,
 		},
 	}
-}
-
-type Message []MessageSegment
-type MessageSegment struct {
-	Type string `json:"type"`
-	Data H      `json:"data"`
-}
-
-// 消息模板
-type Content struct {
-	//图片
-	ImageStr
-	//文本
-	Text     string     `json:"text,omitempty"`
-	Entities []Entities `json:"entities,omitempty"`
-	Images   []ImageStr `json:"images,omitempty"`
-}
-type ImageStr struct {
-	URL      string `json:"url,omitempty"`
-	FileSize int    `json:"file_size,omitempty"`
-	Size     struct {
-		Height int `json:"height,omitempty"`
-		Width  int `json:"width,omitempty"`
-	} `json:"size,omitempty"`
-}
-type Entities struct {
-	Entity H   `json:"entity,omitempty"`
-	Length int `json:"length,omitempty"`
-	Offset int `json:"offset,omitempty"`
-}
-type MentionedInfoStr struct {
-	Type       int      `json:"type"`
-	UserIDList []string `json:"userIdList"`
 }

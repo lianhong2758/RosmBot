@@ -1,16 +1,16 @@
 package ctx
 
-import ()
+import "regexp"
 
 // 回调的请求结构
 type infoSTR struct {
 	Event struct {
 		Robot struct {
-			Template tem `json:"template"`
-			VillaID  int `json:"villa_id"`
+			Template tem `json:"template"` // 机器人模板信息
+			VillaID  int `json:"villa_id"` // 事件所属的大别野 id
 		} `json:"robot"`
-		Type       int `json:"type"`
-		ExtendData struct {
+		Type       int      `json:"type"`
+		ExtendData struct { // 包含事件的具体数据
 			EventData struct {
 				SendMessage      sendmessage      `json:"SendMessage"`
 				JoinVilla        joinVilla        `json:"JoinVilla"`
@@ -25,6 +25,8 @@ type infoSTR struct {
 		SendAt    int    `json:"send_at"`
 	} `json:"event"`
 }
+
+// 机器人相关信息
 type tem struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
@@ -36,6 +38,7 @@ type tem struct {
 	} `json:"commands"`
 }
 
+// 用户@机器人发送消息
 type sendmessage struct {
 	Content    string `json:"content"`
 	FromUserID int    `json:"from_user_id"`
@@ -46,16 +49,19 @@ type sendmessage struct {
 	MsgUID     string `json:"msg_uid"`
 }
 
+// 有新用户加入大别野
 type joinVilla struct {
-	JoinUID          uint64 `json:"join_uid"`
+	JoinUID          int    `json:"join_uid"`
 	JoinUserNickname string `json:"join_user_nickname"`
 	JoinAt           int64  `json:"join_at"`
 }
 
+// 大别野添加机器人实例,大别野删除机器人实例
 type changeRobot struct {
 	VillaID int `json:"villa_id"`
 }
 
+// 用户使用表情回复消息表态
 type addQuickEmoticon struct {
 	VillaID    int    `json:"villa_id"`
 	RoomID     int    `json:"room_id"`
@@ -66,6 +72,8 @@ type addQuickEmoticon struct {
 	BotMsgID   string `json:"bot_msg_id"`
 	IsCancel   bool   `json:"is_cancel"`
 }
+
+// 审核结果回调
 type auditCallback struct {
 	AuditID     string `json:"audit_id"`
 	BotTplID    string `json:"bot_tpl_id"`
@@ -76,17 +84,25 @@ type auditCallback struct {
 	AuditResult int    `json:"audit_result"`
 }
 
-type other struct{}
-
 // 快捷消息结构
 type CTX struct {
-	Mess  *user
+	Mess  *mess
 	Event *sendmessage
-	Other *other
 	Bot   *tem
 	Being *being
 }
-type user struct {
+
+// 常用数据
+type being struct {
+	RoomID  int
+	VillaID int
+	User    *user
+	Word    string
+	Rex     []string
+}
+
+// 接收的原始消息,解析
+type mess struct {
 	Trace struct {
 		VisualRoomVersion string `json:"visual_room_version"`
 		AppVersion        string `json:"app_version"`
@@ -101,16 +117,9 @@ type user struct {
 		UserIDList       []string `json:"userIdList"`
 		Type             int      `json:"type"`
 	} `json:"mentionedInfo"`
-	User struct {
-		PortraitURI string `json:"portraitUri"`
-		Extra       string `json:"extra"`
-		Name        string `json:"name"`
-		Alias       string `json:"alias"`
-		ID          string `json:"id"`
-		Portrait    string `json:"portrait"`
-	} `json:"user"`
+	User    user `json:"user"`
 	Content struct {
-		Images   []interface{} `json:"images"`
+		Images   []any `json:"images"`
 		Entities []struct {
 			Offset int `json:"offset"`
 			Length int `json:"length"`
@@ -122,22 +131,66 @@ type user struct {
 		Text string `json:"text"`
 	} `json:"content"`
 }
+type user struct {
+	PortraitURI string `json:"portraitUri"`
+	Extra       string `json:"extra"`
+	Name        string `json:"name"`
+	Alias       string `json:"alias"`
+	ID          string `json:"id"`
+	Portrait    string `json:"portrait"`
+}
 
+// 消息发送回调
 type sendState struct {
-	Retcode int    `json:"retcode"`
-	Message string `json:"message"`
-	Data    struct {
+	ApiCode
+	Data struct {
 		BotMsgID string `json:"bot_msg_id"`
 	} `json:"data"`
 }
 
+// api返回
 type ApiCode struct {
 	Retcode int    `json:"retcode"`
 	Message string `json:"message"`
 }
-type being struct {
-	RoomID  int
-	VillaID int
-	Word    string
-	Rex     []string
+
+type Message []MessageSegment
+type MessageSegment struct {
+	Type string `json:"type"`
+	Data H      `json:"data"`
+}
+
+// 消息模板
+type Content struct {
+	//图片
+	ImageStr
+	//文本
+	Text     string     `json:"text,omitempty"`
+	Entities []Entities `json:"entities,omitempty"`
+	Images   []ImageStr `json:"images,omitempty"`
+}
+type ImageStr struct {
+	URL      string `json:"url,omitempty"`
+	FileSize int    `json:"file_size,omitempty"`
+	Size     struct {
+		Height int `json:"height,omitempty"`
+		Width  int `json:"width,omitempty"`
+	} `json:"size,omitempty"`
+}
+type Entities struct {
+	Entity H   `json:"entity,omitempty"`
+	Length int `json:"length,omitempty"`
+	Offset int `json:"offset,omitempty"`
+}
+type MentionedInfoStr struct {
+	Type       int      `json:"type"`
+	UserIDList []string `json:"userIdList"`
+}
+
+type PluginData struct {
+	Word       []string
+	Rex        []*regexp.Regexp
+	Help       string
+	Name       string
+	DataFolder string
 }

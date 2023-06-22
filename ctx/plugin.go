@@ -43,11 +43,3 @@ func Display() {
 	log.Println(caseAllWord)
 	log.Println(caseRegexp)
 }
-
-type PluginData struct {
-	Word       []string
-	Rex        []*regexp.Regexp
-	Help       string
-	Name       string
-	DataFolder string
-}
