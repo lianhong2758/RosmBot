@@ -38,7 +38,10 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 			t.Offset = len(utf16.Encode([]rune(msgContent.Text)))
 			msgContent.Entities = append(msgContent.Entities, t)
 			msgContent.Text += message.Data["text"].(string)
-			otherUID := msgContentInfo["mentionedInfo"].(MentionedInfoStr).UserIDList
+			otherUID := []string{}
+			if msgContentInfo["mentionedInfo"] != nil {
+				otherUID = msgContentInfo["mentionedInfo"].(MentionedInfoStr).UserIDList
+			}
 			otherUID = append(otherUID, message.Data["uid"].(string))
 			msgContentInfo["mentionedInfo"] = MentionedInfoStr{Type: 2, UserIDList: otherUID}
 		case "atall":

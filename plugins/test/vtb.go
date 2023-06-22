@@ -26,9 +26,8 @@ func init() { // 插件主体
 			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageWithText(r.Imgurl, 0, 0, 0, "\n今天你的VTB老婆是: ", r.Name))
+		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageWithText(r.Imgurl, 0, 0, 0, "\n今天你的VTB老婆是: "+r.Name))
 		ctx.Send(c.Text(r.Message))
-
 	}, `^抽(vtb|VTB)(老婆)?$`)
 }
 
