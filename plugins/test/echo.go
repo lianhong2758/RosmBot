@@ -7,8 +7,8 @@ import (
 func init() {
 	//插件注册
 	en := c.Register("echo", &c.PluginData{ //插件英文索引
-		Name: "复读",    //中文插件名
-		Help: "复读...", //插件帮助
+		Name: "复读",      //中文插件名
+		Help: "- 复读...", //插件帮助
 	})
 	en.AddRex(func(ctx *c.CTX) { //正则的触发方式
 		ctx.Send(c.Text(ctx.Being.Rex[1])) //发送文字信息

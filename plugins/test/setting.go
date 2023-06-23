@@ -10,7 +10,7 @@ import (
 func init() {
 	en := c.Register("setting", &c.PluginData{
 		Name:       "设置",
-		Help:       "设置欢迎房间xxx",
+		Help:       "-设置欢迎房间xxx",
 		DataFolder: "setting",
 	})
 	en.AddRex(func(ctx *c.CTX) {

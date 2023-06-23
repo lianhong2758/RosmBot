@@ -8,7 +8,7 @@ import (
 func init() {
 	en := c.Register("chat", &c.PluginData{
 		Name: "@回复",
-		Help: "@机器人",
+		Help: "- @机器人",
 	})
 	en.AddWord(func(ctx *c.CTX) {
 		ctx.Send(c.Text(zero.MYSconfig.BotToken.BotName, "不在呢~"))
