@@ -43,3 +43,6 @@ func Display() {
 	log.Println(caseAllWord)
 	log.Println(caseRegexp)
 }
+func GetPlugins() map[string]*PluginData {
+	return plugins
+}
