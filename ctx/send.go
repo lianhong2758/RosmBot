@@ -260,12 +260,8 @@ func ReplyOther(id string, time int64) MessageSegment {
 		},
 	}
 }
+
+// 回复消息
 func (ctx *CTX) Reply() MessageSegment {
-	return MessageSegment{
-		Type: "reply",
-		Data: H{
-			"id":   ctx.Event.MsgUID,
-			"time": ctx.Event.SendAt,
-		},
-	}
+	return ReplyOther(ctx.Event.MsgUID, ctx.Event.SendAt)
 }
