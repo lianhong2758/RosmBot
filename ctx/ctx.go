@@ -3,6 +3,7 @@ package ctx
 import (
 	"encoding/json"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
@@ -21,8 +22,9 @@ func MessReceive(c *gin.Context) {
 func RunWS() {
 	log.Println("[ws]等待建立ws连接")
 	for {
+		header := http.Header{}
 		// 建立WebSocket连接
-		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, nil)
+		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, header)
 		if err != nil {
 			log.Println("[ws]服务器连接失败: ", err)
 			time.Sleep(time.Second * 5)
@@ -52,6 +54,7 @@ func RunHttp() {
 	r.GET("/file/*path", zero.GETImage)
 	r.Run(zero.MYSconfig.Port)
 }
+
 func process(body []byte) {
 	info := new(infoSTR)
 	err := json.Unmarshal(body, info)
@@ -100,7 +103,7 @@ func process(body []byte) {
 			Bot:   &info.Event.Robot.Template,
 		}
 		//消息处理
-		word := ctx.Mess.Content.Text[11:]
+		word := ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:]
 		//关键词触发
 		if f, ok := caseAllWord[word]; ok {
 			ctx.Being.Word = word
