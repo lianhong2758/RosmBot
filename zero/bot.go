@@ -25,4 +25,5 @@ type MYSCFG struct {
 	EventPath string `json:"eventpath"`
 	Port      string `json:"port"`
 	Host      string `json:"host"`
+	Types     int    `json:"types"`
 }

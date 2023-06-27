@@ -5,22 +5,50 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/lianhong2758/RosmBot/zero"
 	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
 func MessReceive(c *gin.Context) {
 	body, _ := c.GetRawData()
+	c.JSON(200, map[string]any{"message": "", "retcode": 0}) //确认接收
+	process(body)
+}
+func RunWS() {
+	for {
+		// 建立WebSocket连接
+		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, nil)
+		if err != nil {
+			log.Println("服务器连接失败: ", err)
+			time.Sleep(time.Second * 5)
+			continue
+		}
+		defer conn.Close()
+
+		for {
+			_, body, err := conn.ReadMessage()
+			if err != nil {
+				log.Println("服务器连接失败: ", err)
+				break
+			}
+			process(body)
+			//延时
+			time.Sleep(time.Millisecond * 100)
+		}
+	}
+}
+
+func process(body []byte) {
 	info := new(infoSTR)
 	err := json.Unmarshal(body, info)
 	if err != nil {
 		log.Println("[info-err]", err)
-		c.JSON(200, gin.H{"message": "", "retcode": 0})
 		return
 	}
-	c.JSON(200, map[string]any{"message": "", "retcode": 0}) //确认接收
 	//调用消息处理件,触发中心
 	switch info.Event.Type {
 	default:
@@ -48,7 +76,6 @@ func MessReceive(c *gin.Context) {
 		err = json.Unmarshal([]byte(info.Event.ExtendData.EventData.SendMessage.Content), u)
 		if err != nil {
 			log.Println("[info-err]", err)
-			c.JSON(200, gin.H{"message": "", "retcode": 0})
 			return
 		}
 		log.Println("[info] (接收消息)", u.User.Name, ":", u.Content.Text)
