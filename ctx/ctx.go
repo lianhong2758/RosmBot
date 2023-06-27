@@ -19,20 +19,23 @@ func MessReceive(c *gin.Context) {
 	process(body)
 }
 func RunWS() {
+	log.Println("[ws]等待建立ws连接")
 	for {
 		// 建立WebSocket连接
 		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, nil)
 		if err != nil {
-			log.Println("服务器连接失败: ", err)
+			log.Println("[ws]服务器连接失败: ", err)
 			time.Sleep(time.Second * 5)
 			continue
+		} else {
+			log.Println("[ws]服务器连接成功: ", zero.MYSconfig.Host)
 		}
 		defer conn.Close()
 
 		for {
 			_, body, err := conn.ReadMessage()
 			if err != nil {
-				log.Println("服务器连接失败: ", err)
+				log.Println("[ws]服务器连接失败: ", err)
 				break
 			}
 			process(body)
@@ -52,7 +55,7 @@ func process(body []byte) {
 	//调用消息处理件,触发中心
 	switch info.Event.Type {
 	default:
-		log.Println(info.Event.ExtendData.EventData)
+		log.Println("[info] (接收未知事件)", info.Event.ExtendData.EventData)
 		return
 	case 1:
 		log.Printf("[info] (入群事件) %s(%d)", info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)

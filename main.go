@@ -24,6 +24,7 @@ func main() {
 		r.GET("/file/*path", zero.GETImage)
 		r.Run(zero.MYSconfig.Port)
 	case 1:
+		ctx.RunWS()
 	}
 
 }
