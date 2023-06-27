@@ -44,7 +44,14 @@ func RunWS() {
 		}
 	}
 }
-
+func RunHttp() {
+	gin.SetMode(gin.ReleaseMode)
+	r := gin.New() //初始化
+	log.Println("bot开始监听消息")
+	r.POST(zero.MYSconfig.EventPath, MessReceive)
+	r.GET("/file/*path", zero.GETImage)
+	r.Run(zero.MYSconfig.Port)
+}
 func process(body []byte) {
 	info := new(infoSTR)
 	err := json.Unmarshal(body, info)
