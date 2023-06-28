@@ -23,6 +23,7 @@ func RunWS() {
 	log.Println("[ws]等待建立ws连接")
 	for {
 		header := http.Header{}
+		header.Add("key", zero.MYSconfig.Key)
 		// 建立WebSocket连接
 		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, header)
 		if err != nil {

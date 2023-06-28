@@ -26,4 +26,5 @@ type MYSCFG struct {
 	Port      string `json:"port"`
 	Host      string `json:"host"`
 	Types     int    `json:"types"`
+	Key       string `json:"key,omitempty"`
 }
