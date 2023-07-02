@@ -13,7 +13,7 @@ func init() {
 		fmt.Println("请输入选择的连接方式:\n0:http连接\n1:ws正向连接")
 		fmt.Scanln(&MYSconfig.Types)
 		if MYSconfig.Types != 0 {
-			MYSconfig.Host = "ws://127.0.0.1/ws/123"
+			MYSconfig.Host = "ws://47.120.13.24/ws/id"
 			MYSconfig.Key = "123"
 		}
 		f, err := os.Create("config.json")
