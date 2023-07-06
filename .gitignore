@@ -8,8 +8,8 @@
 *.so
 *.dylib
 
-/plugins/myplugin
-/data 
+/plugins/myplugin/*
+/data/*
 /config.json
 
 # Test binary, built with `go test -c`
