@@ -63,6 +63,6 @@ func init() {
 			ctx.Send(c.Text("获取图片失败惹"))
 			return
 		}
-		ctx.Send(c.ImageWithText(data, 0, 0, 0, "喵~"))
+		ctx.Send(c.ImageWithText(data, 1080, 2200, 0, "喵~"))
 	}, "随机壁纸", "兽耳", "星空", "白毛", "我要涩涩", "涩涩达咩", "白丝", "黑丝", "丝袜", "随机表情包", "cos", "盲盒", "开盲盒")
 }

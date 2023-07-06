@@ -38,7 +38,9 @@ func UpImgByte(file []byte) (url string) {
 	request.Header.Set("Content-Type", writer.FormDataContentType())
 
 	// 发送请求
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Second * 60,
+	}
 	response, err := client.Do(request)
 	if err != nil {
 		log.Println("[upimg-err]", err)
