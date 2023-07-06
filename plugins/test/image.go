@@ -1,14 +1,8 @@
 package test
 
 import (
-	"io"
-	"net/http"
-	"os"
-	"time"
-
 	c "github.com/lianhong2758/RosmBot/ctx"
 	"github.com/lianhong2758/RosmBot/web"
-	"github.com/lianhong2758/RosmBot/zero"
 )
 
 const (
@@ -28,9 +22,8 @@ const (
 
 func init() {
 	en := c.Register("image", &c.PluginData{
-		Name:       "图片",
-		Help:       "- 随机壁纸" + " | " + "兽耳" + " | " + "星空" + " | " + "白毛" + " | " + "我要涩涩" + " | " + "涩涩达咩" + " | " + "白丝" + " | " + "黑丝" + " | " + "丝袜" + " | " + "随机表情包" + " | " + "cos" + " | " + "盲盒" + " | " + "开盲盒",
-		DataFolder: "image",
+		Name: "图片",
+		Help: "- 随机壁纸" + " | " + "兽耳" + " | " + "星空" + " | " + "白毛" + " | " + "我要涩涩" + " | " + "涩涩达咩" + " | " + "白丝" + " | " + "黑丝" + " | " + "丝袜" + " | " + "随机表情包" + " | " + "cos" + " | " + "盲盒" + " | " + "开盲盒",
 	})
 	en.AddWord(func(ctx *c.CTX) {
 		var url string
@@ -65,37 +58,11 @@ func init() {
 			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		var client = &http.Client{}
-		request, err := http.NewRequest(http.MethodGet, url2, nil)
+		data, err := web.RequestDataWith(web.NewDefaultClient(), url2, "", referer, "", nil)
 		if err != nil {
-			ctx.Send(c.Text("ERROR: ", err))
+			ctx.Send(c.Text("获取图片失败惹"))
 			return
 		}
-		// 增加header选项
-		if referer != "" {
-			request.Header.Add("Referer", referer)
-		}
-		response, err := client.Do(request)
-		if err != nil {
-			ctx.Send(c.Text("ERROR: ", err))
-			return
-		}
-
-		timestamp := time.Now().Format("20060102150405")
-		// 构造文件名
-		imageFileName := "data/image/" + timestamp + ".jpg"
-		file2, err := os.Create(imageFileName)
-		if err != nil {
-			ctx.Send(c.Text("ERROR: ", err))
-			return
-		}
-		defer file2.Close()
-
-		_, err = io.Copy(file2, response.Body)
-		if err != nil {
-			ctx.Send(c.Text("ERROR: ", err))
-			return
-		}
-		ctx.Send(c.ImageWithText(zero.MYSconfig.Host+"/file/image/"+timestamp+".jpg", 0, 0, 0, "喵~"))
+		ctx.Send(c.ImageWithText(data, 0, 0, 0, "喵~"))
 	}, "随机壁纸", "兽耳", "星空", "白毛", "我要涩涩", "涩涩达咩", "白丝", "黑丝", "丝袜", "随机表情包", "cos", "盲盒", "开盲盒")
 }

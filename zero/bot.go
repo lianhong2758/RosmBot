@@ -7,11 +7,7 @@ var MYSconfig = MYSCFG{
 	BotToken: Token{
 		VillaID: []string{"123456"},
 		Master:  []string{"123456"},
-	},
-	EventPath: "/",
-	Port:      "0.0.0.0:80",
-	Host:      "127.0.0.1:80",
-}
+	}}
 
 type Token struct {
 	VillaID   []string `json:"villa_id"`
@@ -22,9 +18,9 @@ type Token struct {
 }
 type MYSCFG struct {
 	BotToken  Token  `json:"token"`
-	EventPath string `json:"eventpath"`
-	Port      string `json:"port"`
-	Host      string `json:"host"`
+	EventPath string `json:"eventpath,omitempty"`
+	Port      string `json:"port,omitempty"`
+	Host      string `json:"host,omitempty"`
 	Types     int    `json:"types"`
 	Key       string `json:"key,omitempty"`
 }

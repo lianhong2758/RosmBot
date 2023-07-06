@@ -99,3 +99,7 @@ func GetData(url, ua string) (body []byte, err error) {
 	}
 	return
 }
+
+func NewDefaultClient() *http.Client {
+	return &http.Client{}
+}

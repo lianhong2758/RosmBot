@@ -26,6 +26,8 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 	msgContentInfo := H{}
 	for _, message := range m {
 		switch message.Type {
+		default:
+			continue
 		case "text":
 			msgContent.Text += message.Data["text"].(string)
 		case "link", "villa_room_link":
@@ -192,7 +194,7 @@ GroupFor:
 }
 
 // url为图片链接,必须直链,w,h为宽高
-func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
+func ImageUrlWithText(url string, w, h, size int, text ...any) MessageSegment {
 	images := ImageStr{
 		URL: url,
 	}
@@ -215,7 +217,7 @@ func ImageWithText(url string, w, h, size int, text ...any) MessageSegment {
 }
 
 // url为图片链接,必须直链,w,h为宽高size大小,不需要项填0
-func Image(url string, w, h, size int) MessageSegment {
+func ImageUrl(url string, w, h, size int) MessageSegment {
 	images := ImageStr{
 		URL: url,
 	}
@@ -234,6 +236,38 @@ func Image(url string, w, h, size int) MessageSegment {
 			"image": images,
 		},
 	}
+}
+
+// 发送普通图片,w,h为宽高size大小,不需要项填0
+func Image(img []byte, w, h, size int) MessageSegment {
+	if url := web.UpImgByte(img); url != "" {
+		return ImageUrl(url, w, h, size)
+	}
+	return MessageSegment{}
+}
+
+// 发送普通图片和文字,w,h为宽高size大小,不需要项填0,text必填
+func ImageWithText(img []byte, w, h, size int, text ...any) MessageSegment {
+	if url := web.UpImgByte(img); url != "" {
+		return ImageUrlWithText(url, w, h, size, text...)
+	}
+	return MessageSegment{}
+}
+
+// 发送图片文件,w,h为宽高size大小,不需要项填0
+func ImageFile(path string, w, h, size int) MessageSegment {
+	if url := web.UpImgfile(path); url != "" {
+		return ImageUrl(url, w, h, size)
+	}
+	return MessageSegment{}
+}
+
+// 发送图片文件和文字,w,h为宽高size大小,不需要项填0,text必填
+func ImageFileWithText(path string, w, h, size int, text ...any) MessageSegment {
+	if url := web.UpImgfile(path); url != "" {
+		return ImageUrlWithText(url, w, h, size, text...)
+	}
+	return MessageSegment{}
 }
 
 // 蓝色跳转链接

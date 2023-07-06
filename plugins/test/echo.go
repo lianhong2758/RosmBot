@@ -14,9 +14,9 @@ func init() {
 		ctx.Send(c.Text(ctx.Being.Rex[1])) //发送文字信息
 	}, "^复读(.*)") //正则
 	en.AddRex(func(ctx *c.CTX) {
-		ctx.Send(c.ImageWithText(ctx.Being.Rex[1], 0, 0, 0, ctx.Being.Rex[2]))
+		ctx.Send(c.ImageUrlWithText(ctx.Being.Rex[1], 0, 0, 0, ctx.Being.Rex[2]))
 	}, "^复图(.*)文字(.*)")
 	en.AddRex(func(ctx *c.CTX) {
-		ctx.Send(c.Image(ctx.Being.Rex[1], 0, 0, 0))
+		ctx.Send(c.ImageUrl(ctx.Being.Rex[1], 0, 0, 0))
 	}, "^复纯图(.*)")
 }
