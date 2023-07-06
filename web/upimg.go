@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	fileUrl = "http://bg.tencentbot.top/image/uploadfile/"
-	imgUrl  = "http://bg.tencentbot.top/image/upload?url="
+	fileUrl = "https://bg.tencentbot.top/image/uploadfile/"
+	imgUrl  = "https://bg.tencentbot.top/image/upload?url="
 )
 
 // 上传byte数据
