@@ -52,7 +52,7 @@ func RunHttp() {
 	r := gin.New() //初始化
 	log.Println("bot开始监听消息")
 	r.POST(zero.MYSconfig.EventPath, MessReceive)
-	r.GET("/file/*path", zero.GETImage)
+	//r.GET("/file/*path", zero.GETImage)
 	r.Run(zero.MYSconfig.Port)
 }
 
