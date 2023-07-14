@@ -21,7 +21,7 @@ const (
 func UpImgByte(file []byte) (url string) {
 	// 创建一个buffer，用于构造multipart/form-data格式的表单数据
 	t := fmt.Sprintf("%d.jpg", time.Now().Unix())
-	log.Println("[ipimg]", t)
+	log.Println("[upimg]", t)
 	var requestBody bytes.Buffer
 	writer := multipart.NewWriter(&requestBody)
 
