@@ -3,8 +3,8 @@ package test
 import (
 	"encoding/json"
 
-	"github.com/FloatTech/floatbox/web"
 	c "github.com/lianhong2758/RosmBot/ctx"
+	"github.com/lianhong2758/RosmBot/web"
 )
 
 const url = "http://8.134.179.136/vtbwife?id="
@@ -15,7 +15,7 @@ func init() { // 插件主体
 		Help: "- 抽vtb(老婆)",
 	})
 	en.AddRex(func(ctx *c.CTX) {
-		body, err := web.GetData(url + ctx.Being.User.ID)
+		body, err := web.GetData(url+ctx.Being.User.ID, "")
 		if err != nil {
 			ctx.Send(c.Text("ERROR: ", err))
 			return
@@ -26,7 +26,7 @@ func init() { // 插件主体
 			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageUrlWithText(r.Imgurl, 0, 0, 0, "\n今天你的VTB老婆是: "+r.Name))
+		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageUrlWithText(web.UpImgUrl(r.Imgurl), 0, 0, 0, "\n今天你的VTB老婆是: "+r.Name))
 		ctx.Send(c.Text(r.Message))
 	}, `^抽(vtb|VTB)(老婆)?$`)
 }
