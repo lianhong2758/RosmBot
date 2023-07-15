@@ -67,7 +67,7 @@ func UpImgfile(filePath string) (url string) {
 	return UpImgByte(file)
 }
 func UpImgUrl(imgurl string) (url string) {
-	body, err := GetData(imgurl, "")
+	body, err := GetData(imgUrl+imgurl, "")
 	if err != nil {
 		log.Println("[upimg-err]", err)
 		return
