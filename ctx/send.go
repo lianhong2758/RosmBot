@@ -271,7 +271,7 @@ func ImageFileWithText(path string, w, h, size int, text ...any) MessageSegment 
 }
 
 // 蓝色跳转链接
-func Link(url string, text ...any) MessageSegment {
+func Link(url string, haveToken bool, text ...any) MessageSegment {
 	t := fmt.Sprint(text...)
 	return MessageSegment{
 		Type: "link",
@@ -279,7 +279,7 @@ func Link(url string, text ...any) MessageSegment {
 			"text": t,
 			"entities": Entities{
 				Length: len(utf16.Encode([]rune(t))),
-				Entity: H{"type": "link", "url": url},
+				Entity: H{"type": "link", "url": url, "requires_bot_access_token": haveToken},
 			},
 		},
 	}
