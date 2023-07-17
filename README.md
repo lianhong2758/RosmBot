@@ -18,7 +18,6 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
     func main(){
      ...
         r.POST(config.EventPath, ctx.MessReceive)
-		r.GET("/file/*path", zero.GETImage)
      ...
     }
 
