@@ -17,8 +17,12 @@ import (
 func MessReceive(c *gin.Context) {
 	body, _ := c.GetRawData()
 	c.JSON(200, map[string]any{"message": "", "retcode": 0}) //确认接收
-	process(body)
+	sign := c.GetHeader("x-rpc-bot_sign")
+	if verify(sign, helper.BytesToString(body), zero.MYSconfig.BotToken.BotSecretConst, zero.MYSconfig.BotToken.BotPubKey) {
+		process(body)
+	}
 }
+
 func RunWS() {
 	log.Println("[ws]等待建立ws连接")
 	for {

@@ -38,8 +38,10 @@ func init() {
 	if MYSconfig.BotToken.BotID == "" || MYSconfig.BotToken.BotSecret == "" {
 		log.Fatalln("[init]未设置bot信息")
 	}
+	//备份
+	MYSconfig.BotToken.BotSecretConst = MYSconfig.BotToken.BotSecret
 	//加密验证
-	MYSconfig.BotToken.BotSecret = Sha256HMac(MYSconfig.BotToken.BotPubKey, MYSconfig.BotToken.BotSecret)
+	//MYSconfig.BotToken.BotSecret = Sha256HMac(MYSconfig.BotToken.BotPubKey, MYSconfig.BotToken.BotSecret)
 }
 
 // HMAC/SHA256加密

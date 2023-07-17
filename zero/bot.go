@@ -9,11 +9,12 @@ var MYSconfig = MYSCFG{
 	}}
 
 type Token struct {
-	Master    []string `json:"master_id"`
-	BotID     string   `json:"bot_id"`
-	BotSecret string   `json:"bot_secret"`
-	BotPubKey string   `json:"bot_pub_key"`
-	BotName   string   `json:"bot_name"`
+	Master         []string `json:"master_id"`
+	BotID          string   `json:"bot_id"`
+	BotSecret      string   `json:"bot_secret"`
+	BotPubKey      string   `json:"bot_pub_key"`
+	BotName        string   `json:"bot_name"`
+	BotSecretConst string   `json:"bot_secret_const,omitempty"`
 }
 type MYSCFG struct {
 	BotToken  Token  `json:"token"`
