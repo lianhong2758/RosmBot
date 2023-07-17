@@ -60,7 +60,7 @@ func verify(sign, body, botSecret, pubKey string) bool {
 		log.Printf("failed to parse DER encoded public key: %v", err)
 		return false
 	}
-	log.Println(publicKey, crypto.SHA256, hashedOrigin[:], signArg)
+	//log.Println(publicKey, crypto.SHA256, hashedOrigin[:], signArg)
 	if err = rsa.VerifyPKCS1v15(publicKey.(*rsa.PublicKey), crypto.SHA256, hashedOrigin[:], signArg); err != nil {
 		log.Println("[info-err] (接收消息): 签名错误")
 		return false
