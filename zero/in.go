@@ -1,6 +1,9 @@
 package zero
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -35,4 +38,14 @@ func init() {
 	if MYSconfig.BotToken.BotID == "" || MYSconfig.BotToken.BotSecret == "" {
 		log.Fatalln("[init]未设置bot信息")
 	}
+	//加密验证
+	MYSconfig.BotToken.BotSecret = Sha256HMac(MYSconfig.BotToken.BotPubKey, MYSconfig.BotToken.BotSecret)
+}
+
+// HMAC/SHA256加密
+func Sha256HMac(pubKey string, botSecret string) string {
+	h := hmac.New(sha256.New, []byte(pubKey))
+	raw := []byte(botSecret)
+	h.Write(raw)
+	return hex.EncodeToString(h.Sum(nil))
 }

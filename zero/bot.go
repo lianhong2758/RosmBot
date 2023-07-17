@@ -5,15 +5,14 @@ import ()
 // 默认值
 var MYSconfig = MYSCFG{
 	BotToken: Token{
-		VillaID: []string{"123456"},
-		Master:  []string{"123456"},
+		Master: []string{"123456"},
 	}}
 
 type Token struct {
-	VillaID   []string `json:"villa_id"`
 	Master    []string `json:"master_id"`
 	BotID     string   `json:"bot_id"`
 	BotSecret string   `json:"bot_secret"`
+	BotPubKey string   `json:"bot_pub_key"`
 	BotName   string   `json:"bot_name"`
 }
 type MYSCFG struct {
