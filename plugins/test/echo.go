@@ -2,6 +2,7 @@ package test
 
 import (
 	c "github.com/lianhong2758/RosmBot/ctx"
+	"github.com/lianhong2758/RosmBot/web"
 )
 
 func init() {
@@ -14,9 +15,9 @@ func init() {
 		ctx.Send(c.Text(ctx.Being.Rex[1])) //发送文字信息
 	}, "^复读(.*)") //正则
 	en.AddRex(func(ctx *c.CTX) {
-		ctx.Send(c.ImageUrlWithText(ctx.Being.Rex[1], 0, 0, 0, ctx.Being.Rex[2]))
+		ctx.Send(c.ImageUrlWithText(web.UpImgUrl(ctx.Being.Rex[1]), 0, 0, 0, ctx.Being.Rex[2]))
 	}, "^复图(.*)文字(.*)")
 	en.AddRex(func(ctx *c.CTX) {
-		ctx.Send(c.ImageUrl(ctx.Being.Rex[1], 0, 0, 0))
+		ctx.Send(c.ImageUrl(web.UpImgUrl(ctx.Being.Rex[1]), 0, 0, 0))
 	}, "^复纯图(.*)")
 }
