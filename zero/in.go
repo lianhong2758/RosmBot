@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func init() {
@@ -38,6 +39,8 @@ func init() {
 	if MYSconfig.BotToken.BotID == "" || MYSconfig.BotToken.BotSecret == "" {
 		log.Fatalln("[init]未设置bot信息")
 	}
+	//修正
+	MYSconfig.BotToken.BotPubKey = strings.ReplaceAll(MYSconfig.BotToken.BotPubKey, " ", "\n")
 	//备份
 	MYSconfig.BotToken.BotSecretConst = MYSconfig.BotToken.BotSecret
 	//加密验证
