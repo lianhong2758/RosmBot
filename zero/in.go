@@ -41,10 +41,21 @@ func init() {
 	}
 	//备份
 	MYSconfig.BotToken.BotSecretConst = MYSconfig.BotToken.BotSecret
+	//修正
+	var pubKeynext strings.Builder
+	s := strings.Fields(MYSconfig.BotToken.BotPubKey)
+	for k, v := range s {
+		if k < 2 || k > len(s)-4 {
+			pubKeynext.WriteString(v)
+			pubKeynext.WriteString(" ")
+		} else {
+			pubKeynext.WriteString(v)
+			pubKeynext.WriteString("\n")
+		}
+	}
+	MYSconfig.BotToken.BotPubKey = strings.TrimSpace(pubKeynext.String()) + "\n"
 	//加密验证
 	MYSconfig.BotToken.BotSecret = Sha256HMac(MYSconfig.BotToken.BotPubKey, MYSconfig.BotToken.BotSecret)
-	//修正
-	MYSconfig.BotToken.BotPubKey = strings.ReplaceAll(MYSconfig.BotToken.BotPubKey, " ", "\n")
 }
 
 // HMAC/SHA256加密
