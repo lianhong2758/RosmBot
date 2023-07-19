@@ -27,7 +27,7 @@ func init() {
 	})
 	en.AddWord(func(ctx *c.CTX) {
 		var url string
-		switch ctx.Being.Word {
+		switch ctx.Being.Word[1:] {
 		case "兽耳":
 			url = shouer
 		case "随机壁纸":
