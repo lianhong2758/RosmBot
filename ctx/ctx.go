@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -107,8 +108,8 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData.SendMessage,
 			Bot:   &info.Event.Robot.Template,
 		}
-		//消息处理
-		word := ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:]
+		//消息处理(切割加去除尾部空格)
+		word := strings.TrimSpace(ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:])
 		//关键词触发
 		if f, ok := caseAllWord[word]; ok {
 			ctx.Being.Word = word
