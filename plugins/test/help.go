@@ -9,7 +9,7 @@ import (
 func init() {
 	en := c.Register("help", &c.PluginData{
 		Name: "帮助菜单",
-		Help: "- help",
+		Help: "- /help",
 	})
 	en.AddWord(func(ctx *c.CTX) {
 		var msg strings.Builder
@@ -24,5 +24,5 @@ func init() {
 		}
 		msg.WriteString("*****************")
 		ctx.Send(c.Text(msg.String()))
-	}, "help", "帮助")
+	}, "/help", "/帮助")
 }

@@ -31,5 +31,5 @@ func init() {
 			}
 		}
 		ctx.Send(c.Text(msg.String()))
-	}, "房间列表")
+	}, "/房间列表")
 }

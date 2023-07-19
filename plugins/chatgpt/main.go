@@ -23,7 +23,7 @@ var (
 func init() {
 	en := c.Register("chatgpt", &c.PluginData{
 		Name:       "chatgpt",
-		Help:       "- @bot //|chatgpt [对话内容]\n",
+		Help:       "- // [对话内容]\n",
 		DataFolder: "chatgpt",
 	})
 	apikeyfile := en.DataFolder + "apikey.txt"
