@@ -45,8 +45,8 @@ type Being struct {
 	RoomID  int		//房间号
 	VillaID int		//大别野号
 	User    *user	//触发者的信息
-	Word    string	//如果的word触发(完全匹配触发),则这里是触发词
-	Rex     []string//如果的rex触发(正则匹配触发),这里的正则全匹配的数组
+	Word    string	//如果是word触发(完全匹配触发),则这里是触发词
+	Rex     []string//如果是rex触发(正则匹配触发),则这里是正则全匹配的数组
 }
 ```
 3发送消息
