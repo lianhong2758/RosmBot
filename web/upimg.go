@@ -8,6 +8,8 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"image"
+	"image/jpeg"
 	"os"
 	"time"
 )
@@ -88,4 +90,13 @@ type upJson struct {
 	URL       string `json:"url"`
 	SecretURL string `json:"secret_url"`
 	Object    string `json:"object"`
+}
+
+// 将 []byte 类型的图片数据转换为 image.Image 类型
+func BytesToImage(imgBytes []byte) (image.Image, error) {
+	img, err := jpeg.Decode(bytes.NewReader(imgBytes))
+	if err != nil {
+		return nil, err
+	}
+	return img, nil
 }
