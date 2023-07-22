@@ -1,6 +1,6 @@
-# RosmBot(迷迭香Bot)
-RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
-# 使用方法
+## RosmBot(迷迭香Bot)
+RosmBot(迷迭香Bot)是大别野(Villa)相关Bot-SDK,由golang编写
+## 使用方法
 
 1直接运行
 ```
@@ -23,7 +23,7 @@ RosmBot(迷迭香Bot)是连接米游社官方接口的Bot,由golang编写
 ```
 之后运行即可
 
-# 插件编写教程
+## 插件编写教程
 
 1注册插件
 ```
@@ -79,5 +79,12 @@ ctx.Recall(msgid, string, roomid uint64, msgtime int64)//撤回消息
 ```
 如果编写的插件没有在plugins/test里面,请手动在main.go里面进行导入注册
 ```
-# 特别鸣谢
-ZeroBot提供部分代码借鉴
+## 特别鸣谢
+[ZeroBot](https://github.com/wdvxdr1123/ZeroBot)提供部分代码借鉴
+## 相关地址
+
+- [大别野Bot开放平台](https://open.miyoushe.com/#/login)
+
+- [官方API文档](https://webstatic.mihoyo.com/vila/bot/doc/)
+
+- [SDK交流大别野](https://dby.miyoushe.com/chat/1722/23652)
