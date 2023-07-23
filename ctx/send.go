@@ -60,6 +60,8 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 		case "reply":
 			id, time := message.Data["id"].(string), message.Data["time"].(int64)
 			msgContentInfo["quote"] = H{"original_message_id": id, "original_message_send_time": time, "quoted_message_id": id, "quoted_message_send_time": time}
+		case "badge":
+			msgContent.Badge = message.Data["badge"].(BadgeStr)
 		}
 	}
 	var objectStr string
@@ -298,4 +300,19 @@ func ReplyOther(id string, time int64) MessageSegment {
 // 回复消息
 func (ctx *CTX) Reply() MessageSegment {
 	return ReplyOther(ctx.Event.MsgUID, ctx.Event.SendAt)
+}
+
+// 特殊结构
+// 下标文字
+func Badge(iocn, text, url string) MessageSegment {
+	return MessageSegment{
+		Type: "badge",
+		Data: H{
+			"badge": BadgeStr{
+				Icon: iocn,
+				Text: text,
+				URL:  url,
+			},
+		},
+	}
 }

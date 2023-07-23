@@ -168,7 +168,12 @@ type Content struct {
 	Text     string     `json:"text,omitempty"`
 	Entities []Entities `json:"entities,omitempty"`
 	Images   []ImageStr `json:"images,omitempty"`
+	//链接预览
+	Preview Preview `json:"preview_link,omitempty"`
+	//下标
+	Badge BadgeStr `json:"badge,omitempty"`
 }
+
 type ImageStr struct {
 	URL      string `json:"url,omitempty"`
 	FileSize int    `json:"file_size,omitempty"`
@@ -177,14 +182,32 @@ type ImageStr struct {
 		Width  int `json:"width,omitempty"`
 	} `json:"size,omitempty"`
 }
+
 type Entities struct {
 	Entity H   `json:"entity,omitempty"`
 	Length int `json:"length,omitempty"`
 	Offset int `json:"offset,omitempty"`
 }
+
 type MentionedInfoStr struct {
 	Type       int      `json:"type"`
 	UserIDList []string `json:"userIdList"`
+}
+
+type Preview struct {
+	Icon       string `json:"icon_url,omitempty"`
+	ImageURL   string `json:"image_url,omitempty"`
+	IsIntLink  bool   `json:"is_internal_link,omitempty"`
+	Title      string `json:"title,omitempty"`
+	Content    string `json:"content,omitempty"`
+	URL        string `json:"url,omitempty"`
+	SourceName string `json:"source_name,omitempty"`
+}
+
+type BadgeStr struct {
+	Icon string `json:"icon_url,omitempty"`
+	Text string `json:"text,omitempty"`
+	URL  string `json:"url,omitempty"`
 }
 
 type PluginData struct {
