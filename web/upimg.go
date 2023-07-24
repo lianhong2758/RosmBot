@@ -4,13 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/gif"
+	"image/jpeg"
+	"image/png"
 	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
-	"image"
-	"image/jpeg"
 	"os"
+	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -23,7 +27,7 @@ const (
 func UpImgByte(file []byte) (url string) {
 	// 创建一个buffer，用于构造multipart/form-data格式的表单数据
 	t := fmt.Sprintf("%d.jpg", time.Now().Unix())
-	log.Println("[upimg]", t)
+	log.Println("[web](upimg)FileName: ", t)
 	var requestBody bytes.Buffer
 	writer := multipart.NewWriter(&requestBody)
 
@@ -99,4 +103,24 @@ func BytesToImage(imgBytes []byte) (image.Image, error) {
 		return nil, err
 	}
 	return img, nil
+}
+
+// 返回本地文件的img对象
+func FileToImage(path string) (image.Image, error) {
+	fileT, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer fileT.Close()
+	fileExtT := strings.ToLower(filepath.Ext(path))
+	var imgT image.Image
+	switch fileExtT {
+	case ".png":
+		imgT, err = png.Decode(fileT)
+	case ".gif":
+		imgT, err = gif.Decode(fileT)
+	default:
+		imgT, err = jpeg.Decode(fileT) //默认按jpg格式处理
+	}
+	return imgT, err
 }
