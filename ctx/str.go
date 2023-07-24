@@ -169,7 +169,7 @@ type Content struct {
 	Entities []Entities `json:"entities,omitempty"`
 	Images   []ImageStr `json:"images,omitempty"`
 	//链接预览
-	Preview *Preview `json:"preview_link,omitempty"`
+	Preview *PreviewStr `json:"preview_link,omitempty"`
 	//下标
 	Badge *BadgeStr `json:"badge,omitempty"`
 }
@@ -195,20 +195,22 @@ type MentionedInfoStr struct {
 	UserIDList []string `json:"userIdList"`
 }
 
-type Preview struct {
-	Icon       string `json:"icon_url,omitempty"`
-	ImageURL   string `json:"image_url,omitempty"`
-	IsIntLink  bool   `json:"is_internal_link,omitempty"`
-	Title      string `json:"title,omitempty"`
-	Content    string `json:"content,omitempty"`
-	URL        string `json:"url,omitempty"`
-	SourceName string `json:"source_name,omitempty"`
+// 预览图片的结构
+type PreviewStr struct {
+	URL        string `json:"url,omitempty"`              //跳转
+	ImageURL   string `json:"image_url,omitempty"`        //大图
+	IsIntLink  bool   `json:"is_internal_link,omitempty"` //link
+	Title      string `json:"title,omitempty"`            //右上角大标题
+	Content    string `json:"content,omitempty"`          //中间小字
+	Icon       string `json:"icon_url,omitempty"`         //左下角小图
+	SourceName string `json:"source_name,omitempty"`      //左下角图标名
 }
 
+// 左下标的结构
 type BadgeStr struct {
-	Icon string `json:"icon_url,omitempty"`
-	Text string `json:"text,omitempty"`
-	URL  string `json:"url,omitempty"`
+	Icon string `json:"icon_url,omitempty"` //图标
+	Text string `json:"text,omitempty"`     //文字
+	URL  string `json:"url,omitempty"`      //跳转
 }
 
 type PluginData struct {

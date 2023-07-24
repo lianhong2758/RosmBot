@@ -12,10 +12,10 @@ import (
 var plugins = map[string]*PluginData{}
 
 // 全匹配字典
-var caseAllWord = map[string]func(c *CTX){}
+var caseAllWord = map[string]func(ctx *CTX){}
 
 // 正则字典
-var caseRegexp = map[*regexp.Regexp]func(c *CTX){}
+var caseRegexp = map[*regexp.Regexp]func(ctx *CTX){}
 
 func Register(pluginName string, p *PluginData) *PluginData {
 	plugins[pluginName] = p
@@ -26,14 +26,14 @@ func Register(pluginName string, p *PluginData) *PluginData {
 	return plugins[pluginName]
 }
 
-func (p *PluginData) AddWord(f func(c *CTX), word ...string) {
+func (p *PluginData) AddWord(f func(ctx *CTX), word ...string) {
 	p.Word = append(p.Word, word...)
 	for _, v := range word {
 		caseAllWord[v] = f
 	}
 }
 
-func (p *PluginData) AddRex(f func(c *CTX), rex string) {
+func (p *PluginData) AddRex(f func(ctx *CTX), rex string) {
 	r := regexp.MustCompile(rex)
 	p.Rex = append(p.Rex, r)
 	caseRegexp[r] = f

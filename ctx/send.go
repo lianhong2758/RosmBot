@@ -61,11 +61,15 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 			id, time := message.Data["id"].(string), message.Data["time"].(int64)
 			msgContentInfo["quote"] = H{"original_message_id": id, "original_message_send_time": time, "quoted_message_id": id, "quoted_message_send_time": time}
 		case "badge":
-			msgContent.Badge = message.Data["badge"].(*BadgeStr)
+			t := message.Data["badge"].(BadgeStr)
+			msgContent.Badge = &t
+		case "view":
+			t := message.Data["view"].(PreviewStr)
+			msgContent.Preview = &t
 		}
 	}
 	var objectStr string
-	if msgContent.Text != "" {
+	if msgContent.URL == "" {
 		objectStr = "MHY:Text"
 	} else {
 		objectStr = "MHY:Image"
@@ -306,15 +310,21 @@ func (ctx *CTX) Reply() MessageSegment {
 
 // 特殊结构
 // 下标文字
-func Badge(iocn, text, url string) MessageSegment {
+func Badge(str BadgeStr) MessageSegment {
 	return MessageSegment{
 		Type: "badge",
 		Data: H{
-			"badge": BadgeStr{
-				Icon: iocn,
-				Text: text,
-				URL:  url,
-			},
+			"badge": str,
+		},
+	}
+}
+
+// 预览组件
+func Preview(str PreviewStr) MessageSegment {
+	return MessageSegment{
+		Type: "view",
+		Data: H{
+			"view": str,
 		},
 	}
 }
