@@ -198,7 +198,8 @@ GroupFor:
 // url为图片链接,必须直链,w,h为宽高
 func ImageUrlWithText(url string, w, h, size int, text ...any) MessageSegment {
 	images := ImageStr{
-		URL: url,
+		URL:  url,
+		Size: new(Size),
 	}
 	if w != 0 {
 		images.Size.Width = w
@@ -221,7 +222,8 @@ func ImageUrlWithText(url string, w, h, size int, text ...any) MessageSegment {
 // url为图片链接,必须直链,w,h为宽高size大小,不需要项填0
 func ImageUrl(url string, w, h, size int) MessageSegment {
 	images := ImageStr{
-		URL: url,
+		URL:  url,
+		Size: new(Size),
 	}
 	if w != 0 {
 		images.Size.Width = w

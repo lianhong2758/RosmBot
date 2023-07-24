@@ -177,10 +177,11 @@ type Content struct {
 type ImageStr struct {
 	URL      string `json:"url,omitempty"`
 	FileSize int    `json:"file_size,omitempty"`
-	Size     *struct {
-		Height int `json:"height,omitempty"`
-		Width  int `json:"width,omitempty"`
-	} `json:"size,omitempty"`
+	Size     *Size  `json:"size,omitempty"`
+}
+type Size struct {
+	Height int `json:"height,omitempty"`
+	Width  int `json:"width,omitempty"`
 }
 
 type Entities struct {
