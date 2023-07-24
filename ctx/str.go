@@ -169,15 +169,15 @@ type Content struct {
 	Entities []Entities `json:"entities,omitempty"`
 	Images   []ImageStr `json:"images,omitempty"`
 	//链接预览
-	Preview Preview `json:"preview_link,omitempty"`
+	Preview *Preview `json:"preview_link,omitempty"`
 	//下标
-	Badge BadgeStr `json:"badge,omitempty"`
+	Badge *BadgeStr `json:"badge,omitempty"`
 }
 
 type ImageStr struct {
 	URL      string `json:"url,omitempty"`
 	FileSize int    `json:"file_size,omitempty"`
-	Size     struct {
+	Size     *struct {
 		Height int `json:"height,omitempty"`
 		Width  int `json:"width,omitempty"`
 	} `json:"size,omitempty"`

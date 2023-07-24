@@ -61,7 +61,7 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 			id, time := message.Data["id"].(string), message.Data["time"].(int64)
 			msgContentInfo["quote"] = H{"original_message_id": id, "original_message_send_time": time, "quoted_message_id": id, "quoted_message_send_time": time}
 		case "badge":
-			msgContent.Badge = message.Data["badge"].(BadgeStr)
+			msgContent.Badge = message.Data["badge"].(*BadgeStr)
 		}
 	}
 	var objectStr string
