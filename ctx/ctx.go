@@ -91,6 +91,7 @@ func process(body []byte) {
 			ctx.Send(Text(info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, "欢迎光临", zero.MYSconfig.BotToken.BotName, "的小屋~"))
 		}
 	case 2:
+		//log.Println(info.Event.ExtendData.EventData.SendMessage.Content)
 		u := new(mess)
 		err = json.Unmarshal([]byte(info.Event.ExtendData.EventData.SendMessage.Content), u)
 		if err != nil {

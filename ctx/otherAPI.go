@@ -10,12 +10,16 @@ import (
 )
 
 const (
-	getRoomList = "https://bbs-api.miyoushe.com/vila/api/bot/platform/getVillaGroupRoomList"
-	getUserData = "https://bbs-api.miyoushe.com/vila/api/bot/platform/getMember"
+	host           = "https://bbs-api.miyoushe.com"
+	getRoomListURL = "/vila/api/bot/platform/getVillaGroupRoomList"
+	getUserDataURL = "/vila/api/bot/platform/getMember"
+	recallURL      = "/vila/api/bot/platform/recallMessage"
+	deleteUserURL  = "/vila/api/bot/platform/deleteVillaMember"
 )
 
+// 获取房间列表
 func (ctx *CTX) GetRoomList() (r *RoomList, err error) {
-	data, err := web.Web(&http.Client{}, getRoomList, http.MethodGet, ctx.makeHeard, nil)
+	data, err := web.Web(&http.Client{}, host+getRoomListURL, http.MethodGet, ctx.makeHeard, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -24,9 +28,10 @@ func (ctx *CTX) GetRoomList() (r *RoomList, err error) {
 	return
 }
 
+// 获取用户信息
 func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 	data, _ := json.Marshal(H{"uid": uid})
-	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	data, err = web.Web(&http.Client{}, host+getUserDataURL, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +40,10 @@ func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 	return
 }
 
+// 踢人
 func (ctx *CTX) DeleteUser(uid uint64) (err error) {
 	data, _ := json.Marshal(H{"uid": uid})
-	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	data, err = web.Web(&http.Client{}, host+deleteUserURL, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	var r ApiCode
 	_ = json.Unmarshal(data, &r)
 	if r.Retcode != 0 {
@@ -46,10 +52,10 @@ func (ctx *CTX) DeleteUser(uid uint64) (err error) {
 	return
 }
 
-// 消息id,房间id,发送时间
-func (ctx *CTX) Recall(msgid, string, roomid uint64, msgtime int64) (err error) {
+// 撤回消息,消息id,房间id,发送时间
+func (ctx *CTX) Recall(msgid string, msgtime, roomid int64) (err error) {
 	data, _ := json.Marshal(H{"msg_uid": msgid, "room_id": roomid, "msg_time": msgtime})
-	data, err = web.Web(&http.Client{}, getUserData, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	data, err = web.Web(&http.Client{}, host+recallURL, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	var r ApiCode
 	_ = json.Unmarshal(data, &r)
 	if r.Retcode != 0 {

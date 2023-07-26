@@ -112,6 +112,12 @@ type mess struct {
 		Env               string `json:"env"`
 		RongSdkVersion    string `json:"rong_sdk_version"`
 	} `json:"trace"`
+	Quote struct {
+		QuotedMessageSendTime   int64  `json:"quoted_message_send_time"`
+		OriginalMessageID       string `json:"original_message_id"`
+		OriginalMessageSendTime int64  `json:"original_message_send_time"`
+		QuotedMessageID         string `json:"quoted_message_id"`
+	} `json:"quote"`
 	MentionedInfo struct {
 		MentionedContent string   `json:"mentionedContent"`
 		UserIDList       []string `json:"userIdList"`
