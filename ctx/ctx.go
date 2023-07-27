@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -74,22 +73,50 @@ func process(body []byte) {
 		log.Println("[info] (接收未知事件)", info.Event.ExtendData.EventData)
 		return
 	case 1:
-		log.Printf("[info] (入群事件) %s(%d)", info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
-		//设置欢迎房间
-		wel, _ := os.ReadFile("data/setting/welcome.txt")
-		welcomeRoom, _ := strconv.Atoi(helper.BytesToString(wel))
+		log.Printf("[info] (入群事件)[%d] %s(%d)\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
-				RoomID:  welcomeRoom, //欢迎大厅
 				User:    &user{ID: strconv.Itoa(info.Event.ExtendData.EventData.JoinVilla.JoinUID), Name: info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname},
 			},
-			Event: &info.Event.ExtendData.EventData.SendMessage,
+			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
-		if ctx.Being.RoomID != 0 {
-			ctx.Send(Text(info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, "欢迎光临", zero.MYSconfig.BotToken.BotName, "的小屋~"))
+		ctx.runFuncAll("join")
+	case 3:
+		log.Printf("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		ctx := &CTX{
+			Being: &being{
+				VillaID: info.Event.Robot.VillaID,
+			},
+			Event: &info.Event.ExtendData.EventData,
+			Bot:   &info.Event.Robot.Template,
 		}
+		ctx.runFuncAll("create")
+	case 4:
+		log.Printf("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		ctx := &CTX{
+			Being: &being{
+				VillaID: info.Event.Robot.VillaID,
+			},
+			Event: &info.Event.ExtendData.EventData,
+			Bot:   &info.Event.Robot.Template,
+		}
+		ctx.runFuncAll("delete")
+	case 5:
+		log.Printf("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
+		ctx := &CTX{
+			Being: &being{
+				VillaID: info.Event.Robot.VillaID,
+				User:    &user{ID: strconv.Itoa(info.Event.ExtendData.EventData.AddQuickEmoticon.UID)},
+				RoomID:  info.Event.ExtendData.EventData.AddQuickEmoticon.RoomID,
+			},
+			Event: &info.Event.ExtendData.EventData,
+			Bot:   &info.Event.Robot.Template,
+		}
+		ctx.runFuncAll("quick")
+	//回调审核
+	//case 6:
 	case 2:
 		//log.Println(info.Event.ExtendData.EventData.SendMessage.Content)
 		u := new(mess)
@@ -98,7 +125,7 @@ func process(body []byte) {
 			log.Println("[info-err]", err)
 			return
 		}
-		log.Println("[info] (接收消息)", u.User.Name, ":", u.Content.Text)
+		log.Printf("[info] (接收消息)[%d] %s:%s\n", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
 		ctx := &CTX{
 			Mess: u,
 			Being: &being{
@@ -106,7 +133,7 @@ func process(body []byte) {
 				RoomID:  info.Event.ExtendData.EventData.SendMessage.RoomID,
 				User:    &u.User,
 			},
-			Event: &info.Event.ExtendData.EventData.SendMessage,
+			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
 		//消息处理(切割加去除尾部空格)
@@ -126,4 +153,12 @@ func process(body []byte) {
 			}
 		}
 	}
+}
+
+// 遍历内部的函数,并执行
+func (ctx *CTX) runFuncAll(types string) {
+	for _, f := range caseOther[types] {
+		f(ctx)
+	}
+	return
 }

@@ -5,6 +5,8 @@ import (
 	"strconv"
 
 	c "github.com/lianhong2758/RosmBot/ctx"
+	"github.com/lianhong2758/RosmBot/zero"
+	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
 func init() {
@@ -37,4 +39,12 @@ func init() {
 		}
 		ctx.Send(c.Text("设置成功"))
 	}, "^设置欢迎房间(.*)")
+	en.AddOther(func(ctx *c.CTX) {
+		wel, _ := os.ReadFile("data/setting/welcome.txt")
+		welcomeRoom, _ := strconv.Atoi(helper.BytesToString(wel))
+		ctx.ChangeSendRoom(welcomeRoom)
+		if ctx.Being.RoomID != 0 {
+			ctx.Send(c.Text(ctx.Being.User.Name, "欢迎光临", zero.MYSconfig.BotToken.BotName, "的小屋~"))
+		}
+	}, "join")
 }

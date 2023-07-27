@@ -11,19 +11,22 @@ type infoSTR struct {
 		} `json:"robot"`
 		Type       int      `json:"type"`
 		ExtendData struct { // 包含事件的具体数据
-			EventData struct {
-				SendMessage      sendmessage      `json:"SendMessage"`
-				JoinVilla        joinVilla        `json:"JoinVilla"`
-				CreateRobot      changeRobot      `json:"CreateRobot"`
-				DeleteRobot      changeRobot      `json:"DeleteRobot"`
-				AddQuickEmoticon addQuickEmoticon `json:"AddQuickEmoticon"`
-				AuditCallback    auditCallback    `json:"AuditCallback"`
-			} `json:"EventData"`
+			EventData EventData `json:"EventData"`
 		} `json:"extend_data"`
 		CreatedAt int64  `json:"created_at"`
 		ID        string `json:"id"`
 		SendAt    int    `json:"send_at"`
 	} `json:"event"`
+}
+
+// 所有事件
+type EventData struct {
+	SendMessage      sendmessage      `json:"SendMessage"`
+	JoinVilla        joinVilla        `json:"JoinVilla"`
+	CreateRobot      changeRobot      `json:"CreateRobot"`
+	DeleteRobot      changeRobot      `json:"DeleteRobot"`
+	AddQuickEmoticon addQuickEmoticon `json:"AddQuickEmoticon"`
+	AuditCallback    auditCallback    `json:"AuditCallback"`
 }
 
 // 机器人相关信息
@@ -87,7 +90,7 @@ type auditCallback struct {
 // 快捷消息结构
 type CTX struct {
 	Mess  *mess
-	Event *sendmessage
+	Event *EventData
 	Bot   *tem
 	Being *being
 }

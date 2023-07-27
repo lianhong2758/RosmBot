@@ -305,7 +305,7 @@ func ReplyOther(id string, time int64) MessageSegment {
 
 // 回复消息
 func (ctx *CTX) Reply() MessageSegment {
-	return ReplyOther(ctx.Event.MsgUID, ctx.Event.SendAt)
+	return ReplyOther(ctx.Event.SendMessage.MsgUID, ctx.Event.SendMessage.SendAt)
 }
 
 // 特殊结构
