@@ -11,7 +11,7 @@ import (
 
 func init() {
 	en := c.Register("setting", &c.PluginData{
-		Name:       "设置",
+		Name:       "入群欢迎",
 		Help:       "-设置欢迎房间xxx",
 		DataFolder: "setting",
 	})
@@ -46,5 +46,5 @@ func init() {
 		if ctx.Being.RoomID != 0 {
 			ctx.Send(c.Text(ctx.Being.User.Name, "欢迎光临", zero.MYSconfig.BotToken.BotName, "的小屋~"))
 		}
-	}, "join")
+	}, c.Join)
 }

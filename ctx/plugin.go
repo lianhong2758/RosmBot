@@ -8,6 +8,13 @@ import (
 	"github.com/FloatTech/floatbox/file"
 )
 
+const (
+	Join   = "join"
+	Create = "create"
+	Delete = "delete"
+	Quick  = "quick"
+)
+
 // 插件注册
 var (
 	plugins = map[string]*PluginData{}
@@ -20,10 +27,10 @@ var (
 
 	//事件触发
 	caseOther = map[string][]func(ctx *CTX){
-		"join":   {},
-		"create": {},
-		"delete": {},
-		"quick":  {},
+		Join:   {},
+		Create: {},
+		Delete: {},
+		Quick:  {},
 	}
 )
 

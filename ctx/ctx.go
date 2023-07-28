@@ -82,7 +82,7 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
-		ctx.runFuncAll("join")
+		ctx.runFuncAll(Join)
 	case 3:
 		log.Printf("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
@@ -92,7 +92,7 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
-		ctx.runFuncAll("create")
+		ctx.runFuncAll(Create)
 	case 4:
 		log.Printf("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
@@ -102,7 +102,7 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
-		ctx.runFuncAll("delete")
+		ctx.runFuncAll(Delete)
 	case 5:
 		log.Printf("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
 		ctx := &CTX{
@@ -114,7 +114,7 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
-		ctx.runFuncAll("quick")
+		ctx.runFuncAll(Quick)
 	//回调审核
 	//case 6:
 	case 2:
