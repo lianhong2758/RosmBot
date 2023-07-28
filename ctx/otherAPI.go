@@ -15,6 +15,7 @@ const (
 	getUserDataURL = "/vila/api/bot/platform/getMember"
 	recallURL      = "/vila/api/bot/platform/recallMessage"
 	deleteUserURL  = "/vila/api/bot/platform/deleteVillaMember"
+	getVillaURL    = "/vila/api/bot/platform/getVilla"
 )
 
 // 获取房间列表
@@ -64,6 +65,18 @@ func (ctx *CTX) Recall(msgid string, msgtime, roomid int64) (err error) {
 	return
 }
 
+// 获取别野信息
+// 获取用户信息
+func (ctx *CTX) GetVillaData() (r *VillaData, err error) {
+	data, err := web.Web(&http.Client{}, host+getVillaURL, http.MethodGet, ctx.makeHeard, nil)
+	if err != nil {
+		return nil, err
+	}
+	r = new(VillaData)
+	err = json.Unmarshal(data, r)
+	return
+}
+
 type RoomList struct {
 	Retcode int    `json:"retcode"`
 	Message string `json:"message"`
@@ -104,5 +117,22 @@ type UserData struct {
 				WebColor string `json:"web_color"`
 			} `json:"role_list"`
 		} `json:"member"`
+	} `json:"data"`
+}
+
+type VillaData struct {
+	Retcode int    `json:"retcode"`
+	Message string `json:"message"`
+	Data    struct {
+		Villa struct {
+			VillaID        string   `json:"villa_id"`
+			Name           string   `json:"name"`
+			VillaAvatarURL string   `json:"villa_avatar_url"`
+			OwnerUID       string   `json:"owner_uid"`
+			IsOfficial     bool     `json:"is_official"`
+			Introduce      string   `json:"introduce"`
+			CategoryID     int      `json:"category_id"`
+			Tags           []string `json:"tags"`
+		} `json:"villa"`
 	} `json:"data"`
 }
