@@ -2,6 +2,7 @@ package test
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"strconv"
 
@@ -17,13 +18,14 @@ func init() {
 		DataFolder: "join",
 	})
 	//读取
-	jd, err := os.ReadFile("data/init/F.txt")
+	jd, err := os.ReadFile(en.DataFolder + "join.txt")
 	if err == nil {
 		// 将 JSON 数据转换为 map
 		err = json.Unmarshal(jd, &list)
 		if err != nil {
 			panic(err)
 		}
+		log.Println("[join]加载", len(list), "条入群欢迎...")
 	}
 	en.AddRex(func(ctx *c.CTX) {
 		key := ctx.Being.Rex[1]
