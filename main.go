@@ -18,5 +18,4 @@ func main() {
 	case 1:
 		ctx.RunWS()
 	}
-
 }
