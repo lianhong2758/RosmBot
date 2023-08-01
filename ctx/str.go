@@ -227,5 +227,5 @@ type PluginData struct {
 	Rex        []*regexp.Regexp
 	Help       string
 	Name       string
-	DataFolder string
+	DataFolder string //"data/xxx/"+
 }
