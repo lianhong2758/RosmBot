@@ -53,7 +53,7 @@ func init() {
 		if ctx.Being.RoomID != 0 {
 			r, _ := ctx.GetVillaData()
 			villaName := r.Data.Villa.Name
-			ctx.Send(ctx.AT(ctx.Being.User.ID), c.Text(",欢迎光临", villaName, "~"))
+			ctx.Send(ctx.AT(ctx.Being.User.ID), c.Text("欢迎光临", villaName, "~"))
 		}
 	}, c.Join)
 }
