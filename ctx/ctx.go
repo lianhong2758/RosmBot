@@ -115,7 +115,6 @@ func process(body []byte) {
 			Bot:   &info.Event.Robot.Template,
 		}
 		ctx.runFuncAll(Quick)
-	//回调审核
 	//case 6:
 	case 2:
 		//log.Println(info.Event.ExtendData.EventData.SendMessage.Content)
@@ -138,9 +137,11 @@ func process(body []byte) {
 		}
 		//消息处理(切割加去除尾部空格)
 		word := strings.TrimSpace(ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:])
+		ctx.Being.Word = word
+		//ctx next
+		ctx.SendNext()
 		//关键词触发
 		if f, ok := caseAllWord[word]; ok {
-			ctx.Being.Word = word
 			f(ctx)
 			return
 		}
