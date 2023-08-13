@@ -1,17 +1,16 @@
 package ctx
 
-import "strconv"
-
-var nextList = map[int]chan *CTX{}
+var nextMessList = map[int]chan *CTX{}
+var nextEmoticonList = map[string]chan *CTX{}
 
 // 获取本房间全体的下一句话
 func (ctx *CTX) GetNextAllMess() (chan *CTX, func()) {
 	next := make(chan *CTX, 1)
 	id := ctx.Being.VillaID + ctx.Being.RoomID
-	nextList[id] = next
+	nextMessList[id] = next
 	return next, func() {
 		close(next)
-		delete(nextList, id)
+		delete(nextMessList, id)
 	}
 }
 
@@ -19,24 +18,41 @@ func (ctx *CTX) GetNextAllMess() (chan *CTX, func()) {
 func (ctx *CTX) GetNextUserMess() (chan *CTX, func()) {
 	next := make(chan *CTX, 1)
 	id := ctx.Being.VillaID + ctx.Being.RoomID + ctx.IntUserID()
-	nextList[id] = next
+	nextMessList[id] = next
 	return next, func() {
 		close(next)
-		delete(nextList, id)
+		delete(nextMessList, id)
 	}
 }
 
-func (ctx *CTX) SendNext() {
-	if len(nextList) == 0 {
+func (ctx *CTX) sendNext() {
+	if len(nextMessList) == 0 {
 		return
 	}
 	//先匹配个人
-	if c, ok := nextList[ctx.Being.VillaID+ctx.Being.RoomID+ctx.IntUserID()]; ok {
+	if c, ok := nextMessList[ctx.Being.VillaID+ctx.Being.RoomID+ctx.IntUserID()]; ok {
 		c <- ctx
 	}
-	if c, ok := nextList[ctx.Being.VillaID+ctx.Being.RoomID]; ok {
+	if c, ok := nextMessList[ctx.Being.VillaID+ctx.Being.RoomID]; ok {
 		c <- ctx
 	}
 }
 
-func (ctx *CTX) IntUserID() int { x, _ := strconv.Atoi(ctx.Being.User.ID); return x }
+// 获取本消息-全体的下一表态
+func (ctx *CTX) GetNextAllEmoticon(botMsgID string) (chan *CTX, func()) {
+	next := make(chan *CTX, 1)
+	nextEmoticonList[botMsgID] = next
+	return next, func() {
+		close(next)
+		delete(nextEmoticonList, botMsgID)
+	}
+}
+
+func (ctx *CTX) emoticonNext() {
+	if len(nextEmoticonList) == 0 {
+		return
+	}
+	if c, ok := nextEmoticonList[ctx.Event.AddQuickEmoticon.BotMsgID]; ok {
+		c <- ctx
+	}
+}

@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/url"
 	"strings"
+	"strconv"
 
 	"github.com/lianhong2758/RosmBot/zero"
 )
@@ -32,6 +33,8 @@ func (ctx *CTX) IsMaster() bool {
 	}
 	return false
 }
+
+func (ctx *CTX) IntUserID() int { x, _ := strconv.Atoi(ctx.Being.User.ID); return x }
 
 // 签名验证
 func verify(sign, body, botSecret, pubKey string) bool {

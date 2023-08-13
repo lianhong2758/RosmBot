@@ -114,8 +114,10 @@ func process(body []byte) {
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
 		}
+		ctx.emoticonNext()
 		ctx.runFuncAll(Quick)
 	//case 6:
+	//回调审核
 	case 2:
 		//log.Println(info.Event.ExtendData.EventData.SendMessage.Content)
 		u := new(mess)
@@ -139,7 +141,7 @@ func process(body []byte) {
 		word := strings.TrimSpace(ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:])
 		ctx.Being.Word = word
 		//ctx next
-		ctx.SendNext()
+		ctx.sendNext()
 		//关键词触发
 		if f, ok := caseAllWord[word]; ok {
 			f(ctx)
