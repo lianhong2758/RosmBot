@@ -1,0 +1,8 @@
+linters:
+  enable:
+    - unused
+
+linters-settings:
+  unused:
+    funcs:
+      - ".*\\.Send(Post)?": "ignore"
