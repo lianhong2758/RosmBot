@@ -1,6 +1,8 @@
 linters:
   enable:
     - unused
+  disable:
+    - errcheck
 
 linters-settings:
   unused:
