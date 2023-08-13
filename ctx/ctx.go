@@ -161,5 +161,4 @@ func (ctx *CTX) runFuncAll(types string) {
 	for _, f := range caseOther[types] {
 		f(ctx)
 	}
-	return
 }
