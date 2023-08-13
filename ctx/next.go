@@ -27,6 +27,9 @@ func (ctx *CTX) GetNextUserMess() (chan *CTX, func()) {
 }
 
 func (ctx *CTX) SendNext() {
+	if len(nextList) == 0 {
+		return
+	}
 	//先匹配个人
 	if c, ok := nextList[ctx.Being.VillaID+ctx.Being.RoomID+ctx.IntUserID()]; ok {
 		c <- ctx
