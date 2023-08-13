@@ -21,7 +21,7 @@ const (
 )
 
 // 主动消息
-func (ctx *CTX) Send(m ...MessageSegment) {
+func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 	msgContent := new(Content)
 	msgContentInfo := H{}
 	for _, message := range m {
@@ -81,23 +81,24 @@ func (ctx *CTX) Send(m ...MessageSegment) {
 	if err != nil {
 		log.Println("[send-err]", err)
 	}
-	var sendState sendState
-	_ = json.Unmarshal(data, &sendState)
+	sendState := new(SendState)
+	_ = json.Unmarshal(data, sendState)
 	log.Println("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
-
+	return sendState
 }
 
 // 转发帖子
-func (ctx *CTX) SendPost(postid string) {
+func (ctx *CTX) SendPost(postid string) *SendState {
 	contentStr := "{\"content\":{\"post_id\":\"" + postid + "\"}}"
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "villa_id": ctx.Being.VillaID, "object_name": "MHY:Post", "msg_content": contentStr})
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
 		log.Println("[send-err]", err)
 	}
-	var sendState sendState
-	_ = json.Unmarshal(data, &sendState)
+	sendState := new(SendState)
+	_ = json.Unmarshal(data, sendState)
 	log.Println("[send]["+sendState.Message+"]", contentStr)
+	return sendState
 }
 
 // 改变发送的房间id

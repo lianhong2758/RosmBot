@@ -150,7 +150,7 @@ type user struct {
 }
 
 // 消息发送回调
-type sendState struct {
+type SendState struct {
 	ApiCode
 	Data struct {
 		BotMsgID string `json:"bot_msg_id"`
