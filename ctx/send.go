@@ -247,34 +247,34 @@ func ImageUrl(url string, w, h, size int) MessageSegment {
 	}
 }
 
-// 发送普通图片,w,h为宽高size大小,不需要项填0
-func Image(img []byte, w, h, size int) MessageSegment {
-	if url := web.UpImgByte(img); url != "" {
-		return ImageUrl(url, w, h, size)
+// 发送普通图片
+func Image(img []byte) MessageSegment {
+	if url, con := web.UpImgByte(img); url != "" {
+		return ImageUrl(url, con.Width, con.Height, 0)
 	}
 	return Text("图片上传失败")
 }
 
-// 发送普通图片和文字,w,h为宽高size大小,不需要项填0,text必填
-func ImageWithText(img []byte, w, h, size int, text ...any) MessageSegment {
-	if url := web.UpImgByte(img); url != "" {
-		return ImageUrlWithText(url, w, h, size, text...)
+// 发送普通图片和文字,text必填
+func ImageWithText(img []byte, text ...any) MessageSegment {
+	if url, con := web.UpImgByte(img); url != "" {
+		return ImageUrlWithText(url, con.Width, con.Height, 0, text...)
 	}
 	return Text("图片上传失败")
 }
 
-// 发送图片文件,w,h为宽高size大小,不需要项填0
-func ImageFile(path string, w, h, size int) MessageSegment {
-	if url := web.UpImgfile(path); url != "" {
-		return ImageUrl(url, w, h, size)
+// 发送图片文件
+func ImageFile(path string) MessageSegment {
+	if url, con := web.UpImgfile(path); url != "" {
+		return ImageUrl(url, con.Width, con.Height, 0)
 	}
 	return Text("图片上传失败")
 }
 
-// 发送图片文件和文字,w,h为宽高size大小,不需要项填0,text必填
-func ImageFileWithText(path string, w, h, size int, text ...any) MessageSegment {
-	if url := web.UpImgfile(path); url != "" {
-		return ImageUrlWithText(url, w, h, size, text...)
+// 发送图片文件和文字,text必填
+func ImageFileWithText(path string, text ...any) MessageSegment {
+	if url, con := web.UpImgfile(path); url != "" {
+		return ImageUrlWithText(url, con.Width, con.Height, 0, text...)
 	}
 	return Text("图片上传失败")
 }

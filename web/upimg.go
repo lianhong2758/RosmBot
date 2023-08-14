@@ -24,7 +24,7 @@ const (
 )
 
 // 上传byte数据
-func UpImgByte(file []byte) (url string) {
+func UpImgByte(file []byte) (url string, con image.Config) {
 	// 创建一个buffer，用于构造multipart/form-data格式的表单数据
 	t := fmt.Sprintf("%d.jpg", time.Now().Unix())
 	log.Println("[web](upimg)FileName: ", t)
@@ -60,11 +60,12 @@ func UpImgByte(file []byte) (url string) {
 		log.Println("[upimg-err]", err)
 		return
 	}
-	return getBodyUrl(body)
+	con, _ = BytesToConfig(file)
+	return getBodyUrl(body), con
 }
 
 // 上传file
-func UpImgfile(filePath string) (url string) {
+func UpImgfile(filePath string) (url string, con image.Config) {
 	file, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Println("[upimg-err]", err)
@@ -123,4 +124,31 @@ func FileToImage(path string) (image.Image, error) {
 		imgT, err = jpeg.Decode(fileT) //默认按jpg格式处理
 	}
 	return imgT, err
+}
+
+// 获取 []byte图片的config
+func BytesToConfig(imgBytes []byte) (image.Config, error) {
+	imgConfig, _, err := image.DecodeConfig(bytes.NewReader(imgBytes))
+	if err != nil {
+		return image.Config{}, err
+	}
+	return imgConfig, nil
+}
+
+// 返回本地文件的config
+func FileToConfig(path string) (image.Config, error) {
+	file, err := os.ReadFile(path)
+	if err != nil {
+		return image.Config{}, err
+	}
+	return BytesToConfig(file)
+}
+
+// 返回本地文件的config
+func URLToConfig(url string) (image.Config, error) {
+	file, err := GetData(url, "")
+	if err != nil {
+		return image.Config{}, err
+	}
+	return BytesToConfig(file)
 }

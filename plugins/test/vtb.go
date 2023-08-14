@@ -26,7 +26,8 @@ func init() { // 插件主体
 			ctx.Send(c.Text("ERROR: ", err))
 			return
 		}
-		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageUrlWithText(web.UpImgUrl(r.Imgurl), 0, 0, 0, "\n今天你的VTB老婆是: "+r.Name))
+		con, _ := web.URLToConfig(r.Imgurl)
+		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageUrlWithText(web.UpImgUrl(r.Imgurl), con.Width, con.Height, 0, "\n今天你的VTB老婆是: "+r.Name))
 		ctx.Send(c.Text(r.Message))
 	}, `^/抽(vtb|VTB)(老婆)?$`)
 }
