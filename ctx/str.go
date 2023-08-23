@@ -100,6 +100,7 @@ type being struct {
 	RoomID  int
 	VillaID int
 	User    *user
+	ATList  []string
 	Word    string
 	Rex     []string
 }

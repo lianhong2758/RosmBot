@@ -81,6 +81,35 @@ func init() {
 			}
 		}
 	}, "测试表情")
+	en.AddWord(func(ctx *c.CTX) {
+		ctx.Send(c.Text("测试开始"))
+		s := c.PreviewStr{
+			Icon:       "http://8.134.179.136/favicon.ico",
+			URL:        "http://8.134.179.136/file?path=CSGO/1.mp4",
+			IsIntLink:  true,
+			SourceName: "清雪API",
+			Title:      "测试视频",
+			Content:    "CSGO精彩击杀,完美竞技平台",
+		}
+		ctx.Send(c.Text("视频测试"), c.Preview(s))
+	}, "测试视频")
+	en.AddWord(func(ctx *c.CTX) {
+		ctx.Send(c.Text("测试开始"))
+		s := c.PreviewStr{
+			Icon:       "http://8.134.179.136/favicon.ico",
+			URL:        "http://8.134.179.136/file?path=CSGO/1.mp4",
+			IsIntLink:  true,
+			SourceName: "清雪API",
+			Title:      "测试视频",
+			Content:    "CSGO精彩击杀,完美竞技平台",
+		}
+		ss := c.BadgeStr{
+			Icon: "http://8.134.179.136/favicon.ico",
+			Text: "清雪官方",
+			URL:  "http://8.134.179.136",
+		}
+		ctx.Send(c.Text("视频测试"), c.Preview(s), c.Badge(ss))
+	}, "测试组合")
 }
 
 //ctx有消息的全部信息,ctx.Being有简单的消息信息获取

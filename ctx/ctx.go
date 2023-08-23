@@ -133,6 +133,7 @@ func process(body []byte) {
 				VillaID: info.Event.Robot.VillaID,
 				RoomID:  info.Event.ExtendData.EventData.SendMessage.RoomID,
 				User:    &u.User,
+				ATList:  u.MentionedInfo.UserIDList,
 			},
 			Event: &info.Event.ExtendData.EventData,
 			Bot:   &info.Event.Robot.Template,
