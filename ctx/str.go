@@ -134,19 +134,21 @@ type mess struct {
 		UserIDList       []string `json:"userIdList"`
 		Type             int      `json:"type"`
 	} `json:"mentionedInfo"`
-	User    user `json:"user"`
-	Content struct {
-		Images   []any `json:"images"`
-		Entities []struct {
-			Offset int `json:"offset"`
-			Length int `json:"length"`
-			Entity struct {
-				Type  string `json:"type"`
-				BotID string `json:"bot_id"`
-			} `json:"entity"`
-		} `json:"entities"`
-		Text string `json:"text"`
-	} `json:"content"`
+	User    user    `json:"user"`
+	Content content `json:"content"`
+}
+
+type content struct {
+	Images   []any `json:"images"`
+	Entities []struct {
+		Offset int `json:"offset"`
+		Length int `json:"length"`
+		Entity struct {
+			Type  string `json:"type"`
+			BotID string `json:"bot_id"`
+		} `json:"entity"`
+	} `json:"entities"`
+	Text string `json:"text"`
 }
 type user struct {
 	PortraitURI string `json:"portraitUri"`

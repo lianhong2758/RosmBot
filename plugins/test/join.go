@@ -2,11 +2,11 @@ package test
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"strconv"
 
 	c "github.com/lianhong2758/RosmBot/ctx"
+	log "github.com/sirupsen/logrus"
 )
 
 var list = map[int]int{}

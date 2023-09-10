@@ -5,13 +5,22 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"flag"
 	"fmt"
-	"log"
 	"os"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func init() {
+	d := flag.Bool("d", false, "Enable debug level log and higher.")
+	flag.Parse()
+	if *d {
+		log.SetLevel(log.DebugLevel)
+	}
+	Kanban()
+	log.Debug("IN DEBUG MODE")
 	f, err := os.ReadFile("config.json")
 	if err != nil {
 		fmt.Println("请输入选择的连接方式:\n0:http连接\n1:ws正向连接")

@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"unicode/utf16"
 
 	"github.com/lianhong2758/RosmBot/web"
 	"github.com/lianhong2758/RosmBot/zero"
+	log "github.com/sirupsen/logrus"
 	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
@@ -79,11 +79,11 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": objectStr, "msg_content": helper.BytesToString(contentStr)})
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
-		log.Println("[send-err]", err)
+		log.Errorln("[send]", err)
 	}
 	sendState := new(SendState)
 	_ = json.Unmarshal(data, sendState)
-	log.Println("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
+	log.Infoln("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
 	return sendState
 }
 
@@ -93,11 +93,11 @@ func (ctx *CTX) SendPost(postid string) *SendState {
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "villa_id": ctx.Being.VillaID, "object_name": "MHY:Post", "msg_content": contentStr})
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
-		log.Println("[send-err]", err)
+		log.Errorln("[send]", err)
 	}
 	sendState := new(SendState)
 	_ = json.Unmarshal(data, sendState)
-	log.Println("[send]["+sendState.Message+"]", contentStr)
+	log.Infoln("[send]["+sendState.Message+"]", contentStr)
 	return sendState
 }
 

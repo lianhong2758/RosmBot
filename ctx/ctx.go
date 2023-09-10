@@ -2,7 +2,6 @@ package ctx
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/lianhong2758/RosmBot/zero"
+	log "github.com/sirupsen/logrus"
 	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
@@ -24,25 +24,25 @@ func MessReceive(c *gin.Context) {
 }
 
 func RunWS() {
-	log.Println("[ws]等待建立ws连接")
+	log.Infoln("[ws]等待建立ws连接")
 	for {
 		header := http.Header{}
 		header.Add("key", zero.MYSconfig.Key)
 		// 建立WebSocket连接
 		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, header)
 		if err != nil {
-			log.Println("[ws]服务器连接失败: ", err)
+			log.Infoln("[ws]服务器连接失败: ", err)
 			time.Sleep(time.Second * 5)
 			continue
 		} else {
-			log.Println("[ws]服务器连接成功: ", zero.MYSconfig.Host)
+			log.Infoln("[ws]服务器连接成功: ", zero.MYSconfig.Host)
 		}
 		defer conn.Close()
 
 		for {
 			_, body, err := conn.ReadMessage()
 			if err != nil {
-				log.Println("[ws]服务器连接失败: ", err)
+				log.Infoln("[ws]服务器连接失败: ", err)
 				break
 			}
 			process(body)
@@ -54,7 +54,7 @@ func RunWS() {
 func RunHttp() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New() //初始化
-	log.Println("[http]bot开始监听消息")
+	log.Infoln("[http]bot开始监听消息")
 	r.POST(zero.MYSconfig.EventPath, MessReceive)
 	//r.GET("/file/*path", zero.GETImage)
 	r.Run(zero.MYSconfig.Port)
@@ -64,16 +64,16 @@ func process(body []byte) {
 	info := new(infoSTR)
 	err := json.Unmarshal(body, info)
 	if err != nil {
-		log.Println("[info-err]", err)
+		log.Infoln("[info-err]", err)
 		return
 	}
 	//调用消息处理件,触发中心
 	switch info.Event.Type {
 	default:
-		log.Println("[info] (接收未知事件)", info.Event.ExtendData.EventData)
+		log.Infoln("[info] (接收未知事件)", info.Event.ExtendData.EventData)
 		return
 	case 1:
-		log.Printf("[info] (入群事件)[%d] %s(%d)\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
+		log.Infof("[info] (入群事件)[%d] %s(%d)\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -84,7 +84,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Join)
 	case 3:
-		log.Printf("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		log.Infof("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -94,7 +94,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Create)
 	case 4:
-		log.Printf("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		log.Infof("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -104,7 +104,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Delete)
 	case 5:
-		log.Printf("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
+		log.Infof("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -123,10 +123,10 @@ func process(body []byte) {
 		u := new(mess)
 		err = json.Unmarshal([]byte(info.Event.ExtendData.EventData.SendMessage.Content), u)
 		if err != nil {
-			log.Println("[info-err]", err)
+			log.Infoln("[info-err]", err)
 			return
 		}
-		log.Printf("[info] (接收消息)[%d] %s:%s\n", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
+		log.Infof("[info] (接收消息)[%d] %s:%s\n", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
 		ctx := &CTX{
 			Mess: u,
 			Being: &being{

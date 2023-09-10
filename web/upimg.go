@@ -9,13 +9,14 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -27,7 +28,7 @@ const (
 func UpImgByte(file []byte) (url string, con image.Config) {
 	// 创建一个buffer，用于构造multipart/form-data格式的表单数据
 	t := fmt.Sprintf("%d.jpg", time.Now().Unix())
-	log.Println("[web](upimg)FileName: ", t)
+	log.Infoln("[web](upimg)FileName: ", t)
 	var requestBody bytes.Buffer
 	writer := multipart.NewWriter(&requestBody)
 
@@ -49,7 +50,7 @@ func UpImgByte(file []byte) (url string, con image.Config) {
 	}
 	response, err := client.Do(request)
 	if err != nil {
-		log.Println("[upimg-err]", err)
+		log.Errorln("[upimg]", err)
 		return
 	}
 	defer response.Body.Close()
@@ -57,7 +58,7 @@ func UpImgByte(file []byte) (url string, con image.Config) {
 	// 处理响应
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		log.Println("[upimg-err]", err)
+		log.Errorln("[upimg]", err)
 		return
 	}
 	con, _ = BytesToConfig(file)
@@ -68,7 +69,7 @@ func UpImgByte(file []byte) (url string, con image.Config) {
 func UpImgfile(filePath string) (url string, con image.Config) {
 	file, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Println("[upimg-err]", err)
+		log.Errorln("[upimg]", err)
 		return
 	}
 	return UpImgByte(file)
@@ -76,7 +77,7 @@ func UpImgfile(filePath string) (url string, con image.Config) {
 func UpImgUrl(imgurl string) (url string) {
 	body, err := GetData(imgUrl+imgurl, "")
 	if err != nil {
-		log.Println("[upimg-err]", err)
+		log.Errorln("[upimg]", err)
 		return
 	}
 	return getBodyUrl(body)
@@ -85,7 +86,7 @@ func getBodyUrl(body []byte) (url string) {
 	r := new(upJson)
 	err := json.Unmarshal(body, r)
 	if err != nil {
-		log.Println("[upimg-err]", err)
+		log.Errorln("[upimg]", err)
 		return
 	}
 	return r.URL
