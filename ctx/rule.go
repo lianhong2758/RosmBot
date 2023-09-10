@@ -7,12 +7,12 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
-	"log"
 	"net/url"
 	"strconv"
 	"strings"
 
 	"github.com/lianhong2758/RosmBot/zero"
+	log "github.com/sirupsen/logrus"
 )
 
 // 是否是主人权限
@@ -26,6 +26,15 @@ func IsMaster(userID string) bool {
 }
 
 func (ctx *CTX) IsMaster() bool {
+	for _, v := range zero.MYSconfig.BotToken.Master {
+		if v == ctx.Being.User.ID {
+			return true
+		}
+	}
+	return false
+}
+
+func OnlyMaster(ctx *CTX) bool {
 	for _, v := range zero.MYSconfig.BotToken.Master {
 		if v == ctx.Being.User.ID {
 			return true
@@ -60,7 +69,7 @@ func verify(sign, body, botSecret, pubKey string) bool {
 	// 将 PEM 格式的公钥解码为 DER 格式的数据
 	block, _ := pem.Decode([]byte(pubKey))
 	if block == nil {
-		log.Println("failed to decode PEM block containing public key")
+		log.Errorln("failed to decode PEM block containing public key")
 		return false
 	}
 	derBytes := block.Bytes
@@ -68,12 +77,12 @@ func verify(sign, body, botSecret, pubKey string) bool {
 	// 解析 DER 格式的公钥，得到 *rsa.PublicKey 类型的变量
 	publicKey, err := x509.ParsePKIXPublicKey(derBytes)
 	if err != nil {
-		log.Printf("failed to parse DER encoded public key: %v", err)
+		log.Errorf("failed to parse DER encoded public key: %v", err)
 		return false
 	}
 	//log.Println(publicKey, crypto.SHA256, hashedOrigin[:], signArg)
 	if err = rsa.VerifyPKCS1v15(publicKey.(*rsa.PublicKey), crypto.SHA256, hashedOrigin[:], signArg); err != nil {
-		log.Println("[info-err] (接收消息): 签名错误")
+		log.Errorln("[info-err] (接收消息): 签名错误")
 		return false
 	}
 	return true

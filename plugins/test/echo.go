@@ -11,7 +11,7 @@ func init() {
 		Name: "复读",      //中文插件名
 		Help: "- 复读...", //插件帮助
 	})
-	en.AddRex("^复读(.*)").SetBlock(true).Rule(func(ctx *c.CTX) bool { return true }).Handle(func(ctx *c.CTX) { //正则的触发方式
+	en.AddRex("^复读(.*)").SetBlock(true).Rule(func(ctx *c.CTX) bool { return true }, c.OnlyMaster).Handle(func(ctx *c.CTX) { //正则的触发方式
 		ctx.Send(c.Text(ctx.Being.Rex[1])) //发送文字信息
 	})
 	en.AddRex("^复图(.*)文字(.*)").Handle(func(ctx *c.CTX) {

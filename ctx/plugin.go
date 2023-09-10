@@ -1,11 +1,11 @@
 package ctx
 
 import (
-	"log"
 	"os"
 	"regexp"
 
 	"github.com/FloatTech/floatbox/file"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -74,7 +74,7 @@ func (p *PluginData) AddOther(types string) *Matcher {
 	if _, ok := caseOther[types]; ok {
 		caseOther[types] = append(caseOther[types], m)
 	} else {
-		log.Panicln("插件载入失败: ", p.Name, "-", types, "#不存在的事件类型")
+		log.Errorln("插件载入失败: ", p.Name, "-", types, "#不存在的事件类型")
 	}
 	p.Matchers = append(p.Matchers, m)
 	return m
