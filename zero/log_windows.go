@@ -13,11 +13,7 @@ type myfoFormatter struct {
 	HasColor bool
 }
 
-func DebugMode() {
-	log.SetLevel(log.DebugLevel)
-}
-
-func InitLogs() {
+func Init() {
 	stdin := windows.Handle(os.Stdin.Fd())
 
 	var mode uint32

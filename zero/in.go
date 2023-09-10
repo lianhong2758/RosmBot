@@ -17,9 +17,8 @@ func init() {
 	d := flag.Bool("d", false, "Enable debug level log and higher.")
 	flag.Parse()
 	if *d {
-		DebugMode()
+		log.SetLevel(log.DebugLevel)
 	}
-	InitLogs()
 	Kanban()
 	f, err := os.ReadFile("config.json")
 	if err != nil {
