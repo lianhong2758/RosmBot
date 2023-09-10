@@ -6,7 +6,7 @@ import (
 )
 
 var banner string = "* Villa + RosmBot + Golang\n" +
-	"* " + time.Now().Format("2006-01-02 :15:04:06") + "+0800 CST\n" +
+	"* " + time.Now().Format("2006-01-02 :15:04:06") + " +0800 CST\n" +
 	"* Project: https://github.com/lianhong2758/RosmBot"
 var line string = "-----------------------------------------------------"
 
