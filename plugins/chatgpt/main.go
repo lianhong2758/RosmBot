@@ -34,7 +34,7 @@ func init() {
 		}
 		apiKey = string(apikey)
 	}
-	en.AddRex(func(ctx *c.CTX) {
+	en.AddRex(`^(?:chatgpt|//)([\s\S]*)$`).Handle(func(ctx *c.CTX) {
 		var messages []chatMessage
 		args := ctx.Being.Rex[1]
 		key := sessionKey{
@@ -61,9 +61,9 @@ func init() {
 		messages = append(messages, reply)
 		cache.Set(key, messages)
 		ctx.Send(ctx.Reply(), c.Text(reply.Content, "\n本次消耗token: ", resp.Usage.PromptTokens, "+", resp.Usage.CompletionTokens, "=", resp.Usage.TotalTokens))
-	}, `^(?:chatgpt|//)([\s\S]*)$`)
+	})
 
-	en.AddRex(func(ctx *c.CTX) {
+	en.AddRex(`^设置\s*OpenAI\s*apikey\s*(.*)$`).Handle(func(ctx *c.CTX) {
 		apiKey = ctx.Being.Rex[1]
 		f, err := os.Create(apikeyfile)
 		if err != nil {
@@ -77,5 +77,5 @@ func init() {
 			return
 		}
 		ctx.Send(c.Text("设置成功"))
-	}, `^设置\s*OpenAI\s*apikey\s*(.*)$`)
+	})
 }

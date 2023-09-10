@@ -9,8 +9,8 @@ import (
 	"encoding/pem"
 	"log"
 	"net/url"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/lianhong2758/RosmBot/zero"
 )
@@ -35,6 +35,14 @@ func (ctx *CTX) IsMaster() bool {
 }
 
 func (ctx *CTX) IntUserID() int { x, _ := strconv.Atoi(ctx.Being.User.ID); return x }
+func (m *Matcher) RulePass(ctx *CTX) bool {
+	for _, v := range m.Rules {
+		if !v(ctx) {
+			return false
+		}
+	}
+	return true
+}
 
 // 签名验证
 func verify(sign, body, botSecret, pubKey string) bool {

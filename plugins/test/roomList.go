@@ -10,7 +10,7 @@ func init() {
 		Name: "房间列表",
 		Help: "- /房间列表",
 	})
-	en.AddWord(func(ctx *c.CTX) {
+	en.AddWord("/房间列表").Handle(func(ctx *c.CTX) {
 		result, err := ctx.GetRoomList()
 		if err != nil {
 			ctx.Send(c.Text("获取信息失败", err))
@@ -31,5 +31,5 @@ func init() {
 			}
 		}
 		ctx.Send(c.Text(msg.String()))
-	}, "/房间列表")
+	})
 }

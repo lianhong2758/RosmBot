@@ -11,7 +11,7 @@ func init() {
 		Name: "帮助菜单",
 		Help: "- /help",
 	})
-	en.AddWord(func(ctx *c.CTX) {
+	en.AddWord("/help", "/帮助").Handle(func(ctx *c.CTX) {
 		var msg strings.Builder
 		msg.WriteString("*****菜单********")
 		for _, v := range c.GetPlugins() {
@@ -24,5 +24,5 @@ func init() {
 		}
 		msg.WriteString("*****************")
 		ctx.Send(c.Text(msg.String()))
-	}, "/help", "/帮助")
+	})
 }

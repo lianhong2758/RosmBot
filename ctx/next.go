@@ -25,17 +25,20 @@ func (ctx *CTX) GetNextUserMess() (chan *CTX, func()) {
 	}
 }
 
-func (ctx *CTX) sendNext() {
+func (ctx *CTX) sendNext() (block bool) {
 	if len(nextMessList) == 0 {
-		return
+		return false
 	}
 	//先匹配个人
 	if c, ok := nextMessList[ctx.Being.VillaID+ctx.Being.RoomID+ctx.IntUserID()]; ok {
 		c <- ctx
+		return true
 	}
 	if c, ok := nextMessList[ctx.Being.VillaID+ctx.Being.RoomID]; ok {
 		c <- ctx
+		return true
 	}
+	return false
 }
 
 // 获取本消息-全体的下一表态

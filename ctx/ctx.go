@@ -142,18 +142,26 @@ func process(body []byte) {
 		word := strings.TrimSpace(ctx.Mess.Content.Text[len(ctx.Bot.Name)+2:])
 		ctx.Being.Word = word
 		//ctx next
-		ctx.sendNext()
+		if ctx.sendNext() {
+			return
+		}
 		//关键词触发
-		if f, ok := caseAllWord[word]; ok {
-			f(ctx)
+		if m, ok := caseAllWord[word]; ok {
+			if m.RulePass(ctx) {
+				m.Handler(ctx)
+			}
 			return
 		}
 		//正则匹配
-		for regex, f := range caseRegexp {
+		for regex, m := range caseRegexp {
 			if match := regex.FindStringSubmatch(word); len(match) > 0 {
-				ctx.Being.Rex = append(ctx.Being.Rex, match...)
-				f(ctx)
-				return
+				if m.RulePass(ctx) {
+					ctx.Being.Rex = match
+					m.Handler(ctx)
+				}
+				if m.Block {
+					return
+				}
 			}
 		}
 	}
@@ -161,7 +169,12 @@ func process(body []byte) {
 
 // 遍历内部的函数,并执行
 func (ctx *CTX) runFuncAll(types string) {
-	for _, f := range caseOther[types] {
-		f(ctx)
+	for _, m := range caseOther[types] {
+		if m.RulePass(ctx) {
+			m.Handler(ctx)
+		}
+		if m.Block {
+			return
+		}
 	}
 }
