@@ -9,7 +9,9 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-type myfoFormatter struct{}
+type myfoFormatter struct {
+	HasColor bool
+}
 
 func DebugMode() {
 	log.SetLevel(log.DebugLevel)
@@ -50,11 +52,14 @@ func InitLogs() {
 	mode |= windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING // 启用虚拟终端处理
 	mode |= windows.ENABLE_PROCESSED_OUTPUT            // 启用处理后的输出
 
-	_ = windows.SetConsoleMode(stdout, mode)
-	log.SetFormatter(&myfoFormatter{})
+	err = windows.SetConsoleMode(stdout, mode)
+	log.SetFormatter(&myfoFormatter{HasColor: err == nil})
+	if err != nil {
+		log.Errorln("设置有色输出失败,默认输出无色")
+	}
 }
 
-func (myfoFormatter) Format(entry *log.Entry) ([]byte, error) {
+func (m myfoFormatter) Format(entry *log.Entry) ([]byte, error) {
 	var color int
 	switch entry.Level {
 	case log.ErrorLevel:
@@ -77,6 +82,10 @@ func (myfoFormatter) Format(entry *log.Entry) ([]byte, error) {
 	//时间
 	formatTime := entry.Time.Format("15:04:06")
 	//设置格式
-	fmt.Fprintf(buff, "\033[3%dm[%s]\033[0m %s %s\n", color, entry.Level, formatTime, entry.Message)
+	if m.HasColor {
+		fmt.Fprintf(buff, "\033[3%dm[%s]\033[0m %s %s\n", color, entry.Level, formatTime, entry.Message)
+	} else {
+		fmt.Fprintf(buff, "[%s] %s %s\n", entry.Level, formatTime, entry.Message)
+	}
 	return buff.Bytes(), nil
 }
