@@ -19,6 +19,7 @@ func init() {
 		if MYSconfig.Types != 0 {
 			MYSconfig.Host = "ws://47.120.13.24/ws/id"
 			MYSconfig.Key = "123"
+			MYSconfig.BotToken.BotPubKey = "-----BEGIN PUBLIC KEY----- abcabc123 -----END PUBLIC KEY----- "
 		} else {
 			MYSconfig.EventPath = "/"
 			MYSconfig.Port = "0.0.0.0:80"

@@ -11,15 +11,15 @@ func init() {
 		Name: "复读",      //中文插件名
 		Help: "- 复读...", //插件帮助
 	})
-	en.AddRex(func(ctx *c.CTX) { //正则的触发方式
+	en.AddRex("^复读(.*)").SetBlock(true).Rule(func(ctx *c.CTX) bool { return true }).Handle(func(ctx *c.CTX) { //正则的触发方式
 		ctx.Send(c.Text(ctx.Being.Rex[1])) //发送文字信息
-	}, "^复读(.*)") //正则
-	en.AddRex(func(ctx *c.CTX) {
+	})
+	en.AddRex("^复图(.*)文字(.*)").Handle(func(ctx *c.CTX) {
 		con, _ := web.URLToConfig(ctx.Being.Rex[1])
 		ctx.Send(c.ImageUrlWithText(web.UpImgUrl(ctx.Being.Rex[1]), con.Width, con.Height, 0, ctx.Being.Rex[2]))
-	}, "^复图(.*)文字(.*)")
-	en.AddRex(func(ctx *c.CTX) {
+	})
+	en.AddRex("^复纯图(.*)").Handle(func(ctx *c.CTX) {
 		con, _ := web.URLToConfig(ctx.Being.Rex[1])
 		ctx.Send(c.ImageUrl(web.UpImgUrl(ctx.Being.Rex[1]), con.Width, con.Height, 0))
-	}, "^复纯图(.*)")
+	})
 }

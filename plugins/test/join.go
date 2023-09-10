@@ -27,7 +27,7 @@ func init() {
 		}
 		log.Println("[join]加载", len(list), "条入群欢迎...")
 	}
-	en.AddRex(func(ctx *c.CTX) {
+	en.AddRex("^设置欢迎房间(.*)").Handle(func(ctx *c.CTX) {
 		key := ctx.Being.Rex[1]
 		if key == "" {
 			ctx.Send(c.Text("输入房间号错误"))
@@ -47,13 +47,13 @@ func init() {
 			panic(err)
 		}
 		ctx.Send(c.Text("设置成功"))
-	}, "^设置欢迎房间(.*)")
-	en.AddOther(func(ctx *c.CTX) {
+	})
+	en.AddOther(c.Join).Handle(func(ctx *c.CTX) {
 		ctx.ChangeSendRoom(list[ctx.Being.VillaID])
 		if ctx.Being.RoomID != 0 {
 			r, _ := ctx.GetVillaData()
 			villaName := r.Data.Villa.Name
 			ctx.Send(ctx.AT(ctx.Being.User.ID), c.Text("欢迎光临", villaName, "~"))
 		}
-	}, c.Join)
+	})
 }

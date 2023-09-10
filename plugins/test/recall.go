@@ -11,7 +11,7 @@ func init() {
 		Name: "撤回消息",
 		Help: "- {回复消息}/撤回",
 	})
-	en.AddWord(func(ctx *c.CTX) {
+	en.AddWord("/撤回").Handle(func(ctx *c.CTX) {
 		if ctx.Mess.Quote.QuotedMessageSendTime != 0 && ctx.Mess.Quote.OriginalMessageID != "" {
 			if err := ctx.Recall(ctx.Mess.Quote.OriginalMessageID, ctx.Mess.Quote.QuotedMessageSendTime, int64(ctx.Being.RoomID)); err != nil {
 				log.Println("[recall-err]", err)
@@ -19,5 +19,5 @@ func init() {
 				log.Println("[recall] 撤回成功,ID: ", ctx.Mess.Quote.OriginalMessageID)
 			}
 		}
-	}, "/撤回")
+	})
 }

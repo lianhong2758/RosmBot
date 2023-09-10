@@ -2,6 +2,13 @@ package ctx
 
 import "regexp"
 
+type (
+	// Rule filter the event
+	Rule func(ctx *CTX) bool
+	// Handler 事件处理函数
+	Handler func(ctx *CTX)
+)
+
 // 回调的请求结构
 type infoSTR struct {
 	Event struct {
@@ -100,6 +107,7 @@ type being struct {
 	RoomID  int
 	VillaID int
 	User    *user
+	ATList  []string
 	Word    string
 	Rex     []string
 }
@@ -223,9 +231,16 @@ type BadgeStr struct {
 }
 
 type PluginData struct {
-	Word       []string
-	Rex        []*regexp.Regexp
 	Help       string
 	Name       string
 	DataFolder string //"data/xxx/"+
+	Matchers   []*Matcher
+}
+
+type Matcher struct {
+	Word    []string
+	Rex     []*regexp.Regexp
+	Rules   []Rule
+	Handler Handler
+	Block   bool //阻断
 }

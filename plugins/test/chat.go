@@ -10,7 +10,7 @@ func init() {
 		Name: "@回复",
 		Help: "- @机器人",
 	})
-	en.AddWord(func(ctx *c.CTX) {
+	en.AddWord("").SetBlock(true).Handle(func(ctx *c.CTX) {
 		ctx.Send(c.Text(zero.MYSconfig.BotToken.BotName, "不在呢~"))
-	}, "")
+	})
 }

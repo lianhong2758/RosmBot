@@ -20,13 +20,13 @@ var (
 	plugins = map[string]*PluginData{}
 
 	// 全匹配字典
-	caseAllWord = map[string]func(ctx *CTX){}
+	caseAllWord = map[string]*Matcher{}
 
 	// 正则字典
-	caseRegexp = map[*regexp.Regexp]func(ctx *CTX){}
+	caseRegexp = map[*regexp.Regexp]*Matcher{}
 
 	//事件触发
-	caseOther = map[string][]func(ctx *CTX){
+	caseOther = map[string][]*Matcher{
 		Join:   {},
 		Create: {},
 		Delete: {},
@@ -45,27 +45,55 @@ func Register(pluginName string, p *PluginData) *PluginData {
 }
 
 // 完全词匹配
-func (p *PluginData) AddWord(f func(ctx *CTX), word ...string) {
-	p.Word = append(p.Word, word...)
+func (p *PluginData) AddWord(word ...string) *Matcher {
+	m := new(Matcher)
+	m.Block = true
+	m.Word = append(m.Word, word...)
 	for _, v := range word {
-		caseAllWord[v] = f
+		caseAllWord[v] = m
 	}
+	p.Matchers = append(p.Matchers, m)
+	return m
 }
 
 // 正则匹配
-func (p *PluginData) AddRex(f func(ctx *CTX), rex string) {
+func (p *PluginData) AddRex(rex string) *Matcher {
+	m := new(Matcher)
+	m.Block = true
 	r := regexp.MustCompile(rex)
-	p.Rex = append(p.Rex, r)
-	caseRegexp[r] = f
+	m.Rex = append(m.Rex, r)
+	caseRegexp[r] = m
+	p.Matchers = append(p.Matchers, m)
+	return m
 }
 
 // 其他事件匹配器
-func (p *PluginData) AddOther(f func(ctx *CTX), types string) {
+func (p *PluginData) AddOther(types string) *Matcher {
+	m := new(Matcher)
+	m.Block = false
 	if _, ok := caseOther[types]; ok {
-		caseOther[types] = append(caseOther[types], f)
+		caseOther[types] = append(caseOther[types], m)
 	} else {
 		log.Panicln("插件载入失败: ", p.Name, "-", types, "#不存在的事件类型")
 	}
+	p.Matchers = append(p.Matchers, m)
+	return m
+}
+
+// 注册Handle
+func (m *Matcher) Handle(h Handler) {
+	m.Handler = h
+}
+
+// 阻断器
+func (m *Matcher) SetBlock(ok bool) *Matcher {
+	m.Block = ok
+	return m
+}
+
+func (m *Matcher) Rule(r ...Rule) *Matcher {
+	m.Rules = append(m.Rules, r...)
+	return m
 }
 func Display() {
 	log.Println(caseAllWord)

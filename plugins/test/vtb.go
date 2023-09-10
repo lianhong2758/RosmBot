@@ -14,7 +14,7 @@ func init() { // 插件主体
 		Name: "抽vtb老婆",
 		Help: "- /抽vtb(老婆)",
 	})
-	en.AddRex(func(ctx *c.CTX) {
+	en.AddRex(`^/抽(vtb|VTB)(老婆)?$`).Handle(func(ctx *c.CTX) {
 		body, err := web.GetData(url+ctx.Being.User.ID, "")
 		if err != nil {
 			ctx.Send(c.Text("ERROR: ", err))
@@ -29,7 +29,7 @@ func init() { // 插件主体
 		con, _ := web.URLToConfig(r.Imgurl)
 		ctx.Send(ctx.AT(ctx.Being.User.ID), c.ImageUrlWithText(web.UpImgUrl(r.Imgurl), con.Width, con.Height, 0, "\n今天你的VTB老婆是: "+r.Name))
 		ctx.Send(c.Text(r.Message))
-	}, `^/抽(vtb|VTB)(老婆)?$`)
+	})
 }
 
 type result struct {
