@@ -33,9 +33,11 @@ func init() {
 		Help: "- @机器人",				   //帮助信息,用于help
 		DataFolder: "chat",				   //可选,创建插件的数据文件夹,不需要数据存储则不需要填写
 	})
-	en.AddWord(func(ctx *c.CTX) {			//创建一个完全匹配指令,之后的匹配后执行的函数
+	//这里是匹配词------这里设置是否阻断继续匹配
+	//还有.Rule()设置指令初始化函数
+	en.AddWord("").SetBlock(true).Handle(func(ctx *c.CTX) {
 		ctx.Send(c.Text(zero.MYSconfig.BotToken.BotName, "不在呢~"))
-	}, "")									//这里是匹配词
+	})
 }
 ```
 2获取触发时传送的数据
