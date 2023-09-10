@@ -13,7 +13,7 @@ type myfoFormatter struct {
 	HasColor bool
 }
 
-func Init() {
+func init() {
 	stdin := windows.Handle(os.Stdin.Fd())
 
 	var mode uint32
