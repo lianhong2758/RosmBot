@@ -53,6 +53,7 @@ func (p *PluginData) AddWord(word ...string) *Matcher {
 		caseAllWord[v] = m
 	}
 	p.Matchers = append(p.Matchers, m)
+	m.PluginNode = p
 	return m
 }
 
@@ -64,6 +65,7 @@ func (p *PluginData) AddRex(rex string) *Matcher {
 	m.Rex = append(m.Rex, r)
 	caseRegexp[r] = m
 	p.Matchers = append(p.Matchers, m)
+	m.PluginNode = p
 	return m
 }
 
@@ -77,6 +79,7 @@ func (p *PluginData) AddOther(types string) *Matcher {
 		log.Errorln("插件载入失败: ", p.Name, "-", types, "#不存在的事件类型")
 	}
 	p.Matchers = append(p.Matchers, m)
+	m.PluginNode = p
 	return m
 }
 

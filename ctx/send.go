@@ -77,6 +77,7 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 	msgContentInfo["content"] = msgContent
 	contentStr, _ := json.Marshal(msgContentInfo)
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": objectStr, "msg_content": helper.BytesToString(contentStr)})
+	log.Debugln("[send]", helper.BytesToString(data))
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
 		log.Errorln("[send]", err)
@@ -84,6 +85,7 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 	sendState := new(SendState)
 	_ = json.Unmarshal(data, sendState)
 	log.Infoln("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
+	log.Debugln("[send]", helper.BytesToString(data))
 	return sendState
 }
 
@@ -91,6 +93,7 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 func (ctx *CTX) SendPost(postid string) *SendState {
 	contentStr := "{\"content\":{\"post_id\":\"" + postid + "\"}}"
 	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "villa_id": ctx.Being.VillaID, "object_name": "MHY:Post", "msg_content": contentStr})
+	log.Debugln("[send]", helper.BytesToString(data))
 	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
 	if err != nil {
 		log.Errorln("[send]", err)
@@ -98,6 +101,7 @@ func (ctx *CTX) SendPost(postid string) *SendState {
 	sendState := new(SendState)
 	_ = json.Unmarshal(data, sendState)
 	log.Infoln("[send]["+sendState.Message+"]", contentStr)
+	log.Debugln("[send]", helper.BytesToString(data))
 	return sendState
 }
 

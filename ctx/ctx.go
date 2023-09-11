@@ -31,7 +31,7 @@ func RunWS() {
 		// 建立WebSocket连接
 		conn, _, err := websocket.DefaultDialer.Dial(zero.MYSconfig.Host, header)
 		if err != nil {
-			log.Infoln("[ws]服务器连接失败: ", err)
+			log.Errorln("[ws]服务器连接失败: ", err)
 			time.Sleep(time.Second * 5)
 			continue
 		} else {
@@ -42,7 +42,7 @@ func RunWS() {
 		for {
 			_, body, err := conn.ReadMessage()
 			if err != nil {
-				log.Infoln("[ws]服务器连接失败: ", err)
+				log.Errorln("[ws]服务器连接失败: ", err)
 				break
 			}
 			process(body)
@@ -64,7 +64,7 @@ func process(body []byte) {
 	info := new(infoSTR)
 	err := json.Unmarshal(body, info)
 	if err != nil {
-		log.Infoln("[info-err]", err)
+		log.Errorln("[info]", err)
 		return
 	}
 	//调用消息处理件,触发中心
@@ -73,6 +73,7 @@ func process(body []byte) {
 		log.Infoln("[info] (接收未知事件)", info.Event.ExtendData.EventData)
 		return
 	case 1:
+		log.Debugln("[debug] (入群事件)", info.Event.ExtendData.EventData.JoinVilla)
 		log.Infof("[info] (入群事件)[%d] %s(%d)\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
 		ctx := &CTX{
 			Being: &being{
@@ -84,6 +85,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Join)
 	case 3:
+		log.Debugln("[debug] (添加bot)", info.Event.ExtendData.EventData.CreateRobot)
 		log.Infof("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
@@ -94,6 +96,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Create)
 	case 4:
+		log.Debugln("[debug] (删除bot)", info.Event.ExtendData.EventData.DeleteRobot)
 		log.Infof("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
@@ -104,6 +107,7 @@ func process(body []byte) {
 		}
 		ctx.runFuncAll(Delete)
 	case 5:
+		log.Debugln("[debug] (接收表态)", info.Event.ExtendData.EventData.AddQuickEmoticon)
 		log.Infof("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
 		ctx := &CTX{
 			Being: &being{
@@ -119,11 +123,11 @@ func process(body []byte) {
 	//case 6:
 	//回调审核
 	case 2:
-		//log.Println(info.Event.ExtendData.EventData.SendMessage.Content)
+		log.Debugln("[debug] (接收消息)", info.Event.ExtendData.EventData.SendMessage.Content)
 		u := new(mess)
 		err = json.Unmarshal([]byte(info.Event.ExtendData.EventData.SendMessage.Content), u)
 		if err != nil {
-			log.Infoln("[info-err]", err)
+			log.Errorln("[info]", err)
 			return
 		}
 		log.Infof("[info] (接收消息)[%d] %s:%s\n", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
@@ -149,6 +153,7 @@ func process(body []byte) {
 		if m, ok := caseAllWord[word]; ok {
 			if m.RulePass(ctx) {
 				m.Handler(ctx)
+				log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 			}
 			return
 		}
@@ -158,6 +163,7 @@ func process(body []byte) {
 				if m.RulePass(ctx) {
 					ctx.Being.Rex = match
 					m.Handler(ctx)
+					log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 				}
 				if m.Block {
 					return
@@ -172,6 +178,7 @@ func (ctx *CTX) runFuncAll(types string) {
 	for _, m := range caseOther[types] {
 		if m.RulePass(ctx) {
 			m.Handler(ctx)
+			log.Debugf("调用插件: %s - 类型: %s", m.PluginNode.Name, types)
 		}
 		if m.Block {
 			return

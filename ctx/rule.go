@@ -82,8 +82,9 @@ func verify(sign, body, botSecret, pubKey string) bool {
 	}
 	//log.Println(publicKey, crypto.SHA256, hashedOrigin[:], signArg)
 	if err = rsa.VerifyPKCS1v15(publicKey.(*rsa.PublicKey), crypto.SHA256, hashedOrigin[:], signArg); err != nil {
-		log.Errorln("[info-err] (接收消息): 签名错误")
+		log.Errorln("[err] (接收消息): 签名错误")
 		return false
 	}
+	log.Debugln("回调签名通过,sign:", sign)
 	return true
 }
