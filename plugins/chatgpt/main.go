@@ -63,7 +63,7 @@ func init() {
 		ctx.Send(ctx.Reply(), c.Text(reply.Content, "\n本次消耗token: ", resp.Usage.PromptTokens, "+", resp.Usage.CompletionTokens, "=", resp.Usage.TotalTokens))
 	})
 
-	en.AddRex(`^设置\s*OpenAI\s*apikey\s*(.*)$`).Handle(func(ctx *c.CTX) {
+	en.AddRex(`^设置\s*OpenAI\s*apikey\s*(.*)$`).Rule(c.OnlyMaster).Handle(func(ctx *c.CTX) {
 		apiKey = ctx.Being.Rex[1]
 		f, err := os.Create(apikeyfile)
 		if err != nil {

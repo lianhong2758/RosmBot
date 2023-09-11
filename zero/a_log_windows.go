@@ -1,17 +1,11 @@
 package zero
 
 import (
-	"bytes"
-	"fmt"
 	"os"
 
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sys/windows"
 )
-
-type myfoFormatter struct {
-	HasColor bool
-}
 
 func init() {
 	stdin := windows.Handle(os.Stdin.Fd())
@@ -49,39 +43,10 @@ func init() {
 	mode |= windows.ENABLE_PROCESSED_OUTPUT            // 启用处理后的输出
 
 	err = windows.SetConsoleMode(stdout, mode)
-	log.SetFormatter(&myfoFormatter{HasColor: err == nil})
 	if err != nil {
+		log.SetFormatter(&ColorNotFormatter{})
 		log.Errorln("设置有色输出失败,默认输出无色")
-	}
-}
-
-func (m myfoFormatter) Format(entry *log.Entry) ([]byte, error) {
-	var color int
-	switch entry.Level {
-	case log.ErrorLevel:
-		color = 1 //red
-	case log.WarnLevel:
-		color = 3 //yellow
-	case log.InfoLevel:
-		color = 2 //green
-	case log.DebugLevel:
-		color = 5
-	default:
-		color = 7 //白
-	}
-	var buff *bytes.Buffer
-	if entry.Buffer == nil {
-		buff = new(bytes.Buffer)
 	} else {
-		buff = entry.Buffer
+		log.SetFormatter(&ColorFormatter{})
 	}
-	//时间
-	formatTime := entry.Time.Format("15:04:06")
-	//设置格式
-	if m.HasColor {
-		fmt.Fprintf(buff, "\033[3%dm[%s]\033[0m %s %s\n", color, entry.Level, formatTime, entry.Message)
-	} else {
-		fmt.Fprintf(buff, "[%s] %s %s\n", entry.Level, formatTime, entry.Message)
-	}
-	return buff.Bytes(), nil
 }

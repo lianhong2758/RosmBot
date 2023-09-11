@@ -240,9 +240,10 @@ type PluginData struct {
 }
 
 type Matcher struct {
-	Word    []string
-	Rex     []*regexp.Regexp
-	Rules   []Rule
-	Handler Handler
-	Block   bool //阻断
+	Word       []string
+	Rex        []*regexp.Regexp
+	Rules      []Rule
+	Handler    Handler
+	Block      bool        //阻断
+	PluginNode *PluginData //溯源
 }
