@@ -53,10 +53,12 @@ type sendmessage struct {
 	Content    string `json:"content"`
 	FromUserID int    `json:"from_user_id"`
 	SendAt     int64  `json:"send_at"`
-	ObjectName int    `json:"object_name"`
 	RoomID     int    `json:"room_id"`
+	ObjectName int    `json:"object_name"`
 	Nickname   string `json:"nickname"`
 	MsgUID     string `json:"msg_uid"`
+	BotMsgID   string `json:"bot_msg_id"`
+	VillaID    int    `json:"villa_id"`
 }
 
 // 有新用户加入大别野

@@ -1,5 +1,5 @@
 package ctx
-
+import "strconv"
 var nextMessList = map[int]chan *CTX{}
 var nextEmoticonList = map[string]chan *CTX{}
 
@@ -59,3 +59,5 @@ func (ctx *CTX) emoticonNext() {
 		c <- ctx
 	}
 }
+
+func (ctx *CTX) IntUserID() int { x, _ := strconv.Atoi(ctx.Being.User.ID); return x }
