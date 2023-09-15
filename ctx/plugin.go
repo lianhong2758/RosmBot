@@ -6,6 +6,7 @@ import (
 
 	"github.com/FloatTech/floatbox/file"
 	log "github.com/sirupsen/logrus"
+	"github.com/wdvxdr1123/ZeroBot/extension/rate"
 )
 
 const (
@@ -99,6 +100,24 @@ func (m *Matcher) Rule(r ...Rule) *Matcher {
 	m.Rules = append(m.Rules, r...)
 	return m
 }
+
+// Limit 限速器
+// postfn 当请求被拒绝时的操作
+func (m *Matcher) Limit(limiterfn func(*CTX) *rate.Limiter, postfn ...func(*CTX)) *Matcher {
+	m.Rules = append(m.Rules, func(ctx *CTX) bool {
+		if limiterfn(ctx).Acquire() {
+			return true
+		}
+		if len(postfn) > 0 {
+			for _, fn := range postfn {
+				fn(ctx)
+			}
+		}
+		return false
+	})
+	return m
+}
+
 func Display() {
 	log.Println(caseAllWord)
 	log.Println(caseRegexp)
