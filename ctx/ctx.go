@@ -152,7 +152,7 @@ func process(body []byte) {
 		//关键词触发
 		if m, ok := caseAllWord[word]; ok {
 			if m.RulePass(ctx) {
-				m.Handler(ctx)
+				m.handler(ctx)
 				log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 			}
 			return
@@ -162,10 +162,10 @@ func process(body []byte) {
 			if match := regex.FindStringSubmatch(word); len(match) > 0 {
 				if m.RulePass(ctx) {
 					ctx.Being.Rex = match
-					m.Handler(ctx)
+					m.handler(ctx)
 					log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 				}
-				if m.Block {
+				if m.block {
 					return
 				}
 			}
@@ -177,10 +177,10 @@ func process(body []byte) {
 func (ctx *CTX) runFuncAll(types string) {
 	for _, m := range caseOther[types] {
 		if m.RulePass(ctx) {
-			m.Handler(ctx)
+			m.handler(ctx)
 			log.Debugf("调用插件: %s - 类型: %s", m.PluginNode.Name, types)
 		}
-		if m.Block {
+		if m.block {
 			return
 		}
 	}

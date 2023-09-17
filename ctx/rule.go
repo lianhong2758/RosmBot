@@ -4,7 +4,7 @@ import "github.com/lianhong2758/RosmBot/zero"
 import log "github.com/sirupsen/logrus"
 
 func (m *Matcher) RulePass(ctx *CTX) bool {
-	for _, v := range m.Rules {
+	for _, v := range m.rules {
 		if !v(ctx) {
 			return false
 		}
