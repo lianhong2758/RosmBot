@@ -74,7 +74,7 @@ func process(body []byte) {
 		return
 	case 1:
 		log.Debugln("[debug] (入群事件)", info.Event.ExtendData.EventData.JoinVilla)
-		log.Infof("[info] (入群事件)[%d] %s(%d)\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
+		log.Infof("[info] (入群事件)[%d] %s(%d)", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -86,7 +86,7 @@ func process(body []byte) {
 		ctx.runFuncAll(Join)
 	case 3:
 		log.Debugln("[debug] (添加bot)", info.Event.ExtendData.EventData.CreateRobot)
-		log.Infof("[info] (添加Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		log.Infof("[info] (添加Bot事件)[%d]", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -97,7 +97,7 @@ func process(body []byte) {
 		ctx.runFuncAll(Create)
 	case 4:
 		log.Debugln("[debug] (删除bot)", info.Event.ExtendData.EventData.DeleteRobot)
-		log.Infof("[info] (删除Bot事件)[%d]\n", info.Event.Robot.VillaID)
+		log.Infof("[info] (删除Bot事件)[%d]", info.Event.Robot.VillaID)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -108,7 +108,7 @@ func process(body []byte) {
 		ctx.runFuncAll(Delete)
 	case 5:
 		log.Debugln("[debug] (接收表态)", info.Event.ExtendData.EventData.AddQuickEmoticon)
-		log.Infof("[info] (表态事件)[%d] %d:%s\n", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
+		log.Infof("[info] (表态事件)[%d] %d:%s", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
 		ctx := &CTX{
 			Being: &being{
 				VillaID: info.Event.Robot.VillaID,
@@ -130,7 +130,7 @@ func process(body []byte) {
 			log.Errorln("[info]", err)
 			return
 		}
-		log.Infof("[info] (接收消息)[%d] %s:%s\n", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
+		log.Infof("[info] (接收消息)[%d] %s:%s", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
 		ctx := &CTX{
 			Mess: u,
 			Being: &being{
@@ -152,7 +152,7 @@ func process(body []byte) {
 		//关键词触发
 		if m, ok := caseAllWord[word]; ok {
 			if m.RulePass(ctx) {
-				m.Handler(ctx)
+				m.handler(ctx)
 				log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 			}
 			return
@@ -162,10 +162,10 @@ func process(body []byte) {
 			if match := regex.FindStringSubmatch(word); len(match) > 0 {
 				if m.RulePass(ctx) {
 					ctx.Being.Rex = match
-					m.Handler(ctx)
+					m.handler(ctx)
 					log.Debugf("调用插件: %s - 匹配关键词: %s", m.PluginNode.Name, word)
 				}
-				if m.Block {
+				if m.block {
 					return
 				}
 			}
@@ -177,10 +177,10 @@ func process(body []byte) {
 func (ctx *CTX) runFuncAll(types string) {
 	for _, m := range caseOther[types] {
 		if m.RulePass(ctx) {
-			m.Handler(ctx)
+			m.handler(ctx)
 			log.Debugf("调用插件: %s - 类型: %s", m.PluginNode.Name, types)
 		}
-		if m.Block {
+		if m.block {
 			return
 		}
 	}

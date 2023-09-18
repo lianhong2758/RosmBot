@@ -66,7 +66,6 @@ func (ctx *CTX) Recall(msgid string, msgtime, roomid int64) (err error) {
 }
 
 // 获取别野信息
-// 获取用户信息
 func (ctx *CTX) GetVillaData() (r *VillaData, err error) {
 	data, err := web.Web(&http.Client{}, host+getVillaURL, http.MethodGet, ctx.makeHeard, nil)
 	if err != nil {

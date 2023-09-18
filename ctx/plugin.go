@@ -6,6 +6,7 @@ import (
 
 	"github.com/FloatTech/floatbox/file"
 	log "github.com/sirupsen/logrus"
+	"github.com/wdvxdr1123/ZeroBot/extension/rate"
 )
 
 const (
@@ -48,7 +49,7 @@ func Register(pluginName string, p *PluginData) *PluginData {
 // 完全词匹配
 func (p *PluginData) AddWord(word ...string) *Matcher {
 	m := new(Matcher)
-	m.Block = true
+	m.block = true
 	m.Word = append(m.Word, word...)
 	for _, v := range word {
 		caseAllWord[v] = m
@@ -61,7 +62,7 @@ func (p *PluginData) AddWord(word ...string) *Matcher {
 // 正则匹配
 func (p *PluginData) AddRex(rex string) *Matcher {
 	m := new(Matcher)
-	m.Block = true
+	m.block = true
 	r := regexp.MustCompile(rex)
 	m.Rex = append(m.Rex, r)
 	caseRegexp[r] = m
@@ -73,7 +74,7 @@ func (p *PluginData) AddRex(rex string) *Matcher {
 // 其他事件匹配器
 func (p *PluginData) AddOther(types string) *Matcher {
 	m := new(Matcher)
-	m.Block = false
+	m.block = false
 	if _, ok := caseOther[types]; ok {
 		caseOther[types] = append(caseOther[types], m)
 	} else {
@@ -86,19 +87,37 @@ func (p *PluginData) AddOther(types string) *Matcher {
 
 // 注册Handle
 func (m *Matcher) Handle(h Handler) {
-	m.Handler = h
+	m.handler = h
 }
 
 // 阻断器
 func (m *Matcher) SetBlock(ok bool) *Matcher {
-	m.Block = ok
+	m.block = ok
 	return m
 }
 
 func (m *Matcher) Rule(r ...Rule) *Matcher {
-	m.Rules = append(m.Rules, r...)
+	m.rules = append(m.rules, r...)
 	return m
 }
+
+// Limit 限速器
+// postfn 当请求被拒绝时的操作
+func (m *Matcher) Limit(limiterfn func(*CTX) *rate.Limiter, postfn ...func(*CTX)) *Matcher {
+	m.rules = append(m.rules, func(ctx *CTX) bool {
+		if limiterfn(ctx).Acquire() {
+			return true
+		}
+		if len(postfn) > 0 {
+			for _, fn := range postfn {
+				fn(ctx)
+			}
+		}
+		return false
+	})
+	return m
+}
+
 func Display() {
 	log.Println(caseAllWord)
 	log.Println(caseRegexp)
