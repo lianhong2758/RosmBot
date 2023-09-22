@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	en := c.Register("recall", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name: "撤回消息",
 		Help: "- {回复消息}/撤回",
 	})

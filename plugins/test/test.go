@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	en := c.Register("test", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name: "测试",
 		Help: "- 测试\n" +
 			"- 测试下标\n" +
@@ -17,7 +17,7 @@ func init() {
 			"- 测试表情",
 	})
 	en.AddWord("测试").Handle(func(ctx *c.CTX) {
-		ctx.Send(c.Text("你好"), ctx.AT("76257069"), c.Link("www.baidu.com", false, "百度一下"), c.ATAll(), ctx.RoomLink("23648"), c.Text("[爱心]"))
+		ctx.Send(c.Text("你好"), ctx.AT("76257069"), c.Link("www.baidu.com", false, "百度一下"), ctx.RoomLink("23648"), c.Text("[爱心]"))
 	})
 	en.AddWord("测试下标").Handle(func(ctx *c.CTX) {
 		s := c.BadgeStr{

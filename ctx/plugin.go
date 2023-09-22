@@ -36,14 +36,20 @@ var (
 )
 
 // 注册插件
-func Register(pluginName string, p *PluginData) *PluginData {
+func Register(p *PluginData) *PluginData {
+	pluginName := p.Name
 	log.Debugln("插件注册:", pluginName)
 	plugins[pluginName] = p
-	if file.IsNotExist(p.DataFolder) && p.DataFolder != "" {
+	if p.DataFolder != "" && file.IsNotExist(p.DataFolder) {
 		_ = os.MkdirAll("data/"+p.DataFolder, 0755)
 	}
 	plugins[pluginName].DataFolder = "data/" + p.DataFolder + "/"
 	return plugins[pluginName]
+}
+
+// 创建插件对象信息
+func NewRegist(name, help, dataFolder string) *PluginData {
+	return &PluginData{Name: name, Help: help, DataFolder: dataFolder}
 }
 
 // 完全词匹配

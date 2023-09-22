@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	en := c.Register("roomlist", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name: "房间列表",
 		Help: "- /房间列表",
 	})

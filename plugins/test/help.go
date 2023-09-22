@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	en := c.Register("help", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name: "帮助菜单",
 		Help: "- /help",
 	})

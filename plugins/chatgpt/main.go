@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	en := c.Register("chatgpt", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name:       "chatgpt",
 		Help:       "- // [对话内容]\n",
 		DataFolder: "chatgpt",

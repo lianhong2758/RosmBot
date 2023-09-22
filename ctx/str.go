@@ -2,6 +2,8 @@ package ctx
 
 import "regexp"
 
+type H = map[string]any
+
 type (
 	// Rule filter the event
 	Rule func(ctx *CTX) bool

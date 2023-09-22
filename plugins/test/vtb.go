@@ -10,7 +10,7 @@ import (
 const url = "http://8.134.179.136/vtbwife?id="
 
 func init() { // 插件主体
-	en := c.Register("vtbwife", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name: "抽vtb老婆",
 		Help: "- /抽vtb(老婆)",
 	})

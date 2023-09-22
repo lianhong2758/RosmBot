@@ -12,7 +12,7 @@ import (
 var list = map[int]int{}
 
 func init() {
-	en := c.Register("setting", &c.PluginData{
+	en := c.Register(&c.PluginData{
 		Name:       "入群欢迎",
 		Help:       "-设置欢迎房间xxx",
 		DataFolder: "join",
