@@ -76,7 +76,7 @@ func process(body []byte) {
 		log.Debugln("[debug] (入群事件)", info.Event.ExtendData.EventData.JoinVilla)
 		log.Infof("[info] (入群事件)[%d] %s(%d)", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname, info.Event.ExtendData.EventData.JoinVilla.JoinUID)
 		ctx := &CTX{
-			Being: &being{
+			Being: &Being{
 				VillaID: info.Event.Robot.VillaID,
 				User:    &user{ID: strconv.Itoa(info.Event.ExtendData.EventData.JoinVilla.JoinUID), Name: info.Event.ExtendData.EventData.JoinVilla.JoinUserNickname},
 			},
@@ -88,7 +88,7 @@ func process(body []byte) {
 		log.Debugln("[debug] (添加bot)", info.Event.ExtendData.EventData.CreateRobot)
 		log.Infof("[info] (添加Bot事件)[%d]", info.Event.Robot.VillaID)
 		ctx := &CTX{
-			Being: &being{
+			Being: &Being{
 				VillaID: info.Event.Robot.VillaID,
 			},
 			Event: &info.Event.ExtendData.EventData,
@@ -99,7 +99,7 @@ func process(body []byte) {
 		log.Debugln("[debug] (删除bot)", info.Event.ExtendData.EventData.DeleteRobot)
 		log.Infof("[info] (删除Bot事件)[%d]", info.Event.Robot.VillaID)
 		ctx := &CTX{
-			Being: &being{
+			Being: &Being{
 				VillaID: info.Event.Robot.VillaID,
 			},
 			Event: &info.Event.ExtendData.EventData,
@@ -110,7 +110,7 @@ func process(body []byte) {
 		log.Debugln("[debug] (接收表态)", info.Event.ExtendData.EventData.AddQuickEmoticon)
 		log.Infof("[info] (表态事件)[%d] %d:%s", info.Event.Robot.VillaID, info.Event.ExtendData.EventData.AddQuickEmoticon.UID, info.Event.ExtendData.EventData.AddQuickEmoticon.Emoticon)
 		ctx := &CTX{
-			Being: &being{
+			Being: &Being{
 				VillaID: info.Event.Robot.VillaID,
 				User:    &user{ID: strconv.Itoa(info.Event.ExtendData.EventData.AddQuickEmoticon.UID)},
 				RoomID:  info.Event.ExtendData.EventData.AddQuickEmoticon.RoomID,
@@ -133,7 +133,7 @@ func process(body []byte) {
 		log.Infof("[info] (接收消息)[%d] %s:%s", info.Event.Robot.VillaID, u.User.Name, u.Content.Text)
 		ctx := &CTX{
 			Mess: u,
-			Being: &being{
+			Being: &Being{
 				VillaID: info.Event.Robot.VillaID,
 				RoomID:  info.Event.ExtendData.EventData.SendMessage.RoomID,
 				User:    &u.User,

@@ -103,11 +103,11 @@ type CTX struct {
 	Mess  *mess
 	Event *EventData
 	Bot   *tem
-	Being *being
+	Being *Being
 }
 
 // 常用数据
-type being struct {
+type Being struct {
 	RoomID  int
 	VillaID int
 	User    *user
