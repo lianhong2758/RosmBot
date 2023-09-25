@@ -14,14 +14,28 @@ import (
 	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
-type H = map[string]any
-
 const (
 	sendMessage = "https://bbs-api.miyoushe.com/vila/api/bot/platform/sendMessage"
 )
 
 // 主动消息
 func (ctx *CTX) Send(m ...MessageSegment) *SendState {
+	msgContentInfo, objectStr := makeMsgContent(m...)
+	contentStr, _ := json.Marshal(msgContentInfo)
+	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": objectStr, "msg_content": helper.BytesToString(contentStr)})
+	log.Debugln("[send]", helper.BytesToString(data))
+	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
+	if err != nil {
+		log.Errorln("[send]", err)
+	}
+	sendState := new(SendState)
+	_ = json.Unmarshal(data, sendState)
+	log.Infoln("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
+	log.Debugln("[send]", helper.BytesToString(data))
+	return sendState
+}
+
+func makeMsgContent(m ...MessageSegment) (content any, object string) {
 	msgContent := new(Content)
 	msgContentInfo := H{}
 	for _, message := range m {
@@ -66,6 +80,8 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 		case "view":
 			t := message.Data["view"].(PreviewStr)
 			msgContent.Preview = &t
+		case "my":
+			return message.Data["my"], "MHY:Text"
 		}
 	}
 	var objectStr string
@@ -75,18 +91,7 @@ func (ctx *CTX) Send(m ...MessageSegment) *SendState {
 		objectStr = "MHY:Image"
 	}
 	msgContentInfo["content"] = msgContent
-	contentStr, _ := json.Marshal(msgContentInfo)
-	data, _ := json.Marshal(H{"room_id": ctx.Being.RoomID, "object_name": objectStr, "msg_content": helper.BytesToString(contentStr)})
-	log.Debugln("[send]", helper.BytesToString(data))
-	data, err := web.Web(&http.Client{}, sendMessage, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
-	if err != nil {
-		log.Errorln("[send]", err)
-	}
-	sendState := new(SendState)
-	_ = json.Unmarshal(data, sendState)
-	log.Infoln("[send]["+sendState.Message+"]", helper.BytesToString(contentStr))
-	log.Debugln("[send]", helper.BytesToString(data))
-	return sendState
+	return &msgContentInfo, objectStr
 }
 
 // 转发帖子
@@ -330,6 +335,15 @@ func Preview(str PreviewStr) MessageSegment {
 		Type: "view",
 		Data: H{
 			"view": str,
+		},
+	}
+}
+
+func MYContent(content any) MessageSegment {
+	return MessageSegment{
+		Type: "my",
+		Data: H{
+			"my": content,
 		},
 	}
 }

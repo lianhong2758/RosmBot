@@ -1,13 +1,16 @@
 package test
 
 import (
+	"encoding/json"
+
 	c "github.com/lianhong2758/RosmBot/ctx"
 	"github.com/lianhong2758/RosmBot/web"
+	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 )
 
 func init() {
 	//插件注册
-	en := c.Register("echo", &c.PluginData{ //插件英文索引
+	en := c.Register(&c.PluginData{ //插件英文索引
 		Name: "复读",      //中文插件名
 		Help: "- 复读...", //插件帮助
 	})
@@ -21,5 +24,14 @@ func init() {
 	en.AddRex("^复纯图(.*)").Handle(func(ctx *c.CTX) {
 		con, _ := web.URLToConfig(ctx.Being.Rex[1])
 		ctx.Send(c.ImageUrl(web.UpImgUrl(ctx.Being.Rex[1]), con.Width, con.Height, 0))
+	})
+	en.AddRex(`^解析([\s\S]*)$`).Handle(func(ctx *c.CTX) {
+		info := new(c.H)
+		err := json.Unmarshal(helper.StringToBytes(ctx.Being.Rex[1]), info)
+		if err != nil {
+			ctx.Send(c.Text("解析失败", err))
+			return
+		}
+		ctx.Send(c.MYContent(info))
 	})
 }
