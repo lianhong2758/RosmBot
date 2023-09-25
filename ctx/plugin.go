@@ -10,10 +10,12 @@ import (
 )
 
 const (
-	Join   = "join"
-	Create = "create"
-	Delete = "delete"
-	Quick  = "quick"
+	Join           = "join"
+	Create         = "create"
+	Delete         = "delete"
+	Quick          = "quick"
+	AllMessage     = "all"
+	SurplusMessage = "surplus"
 )
 
 // 插件注册
@@ -28,10 +30,12 @@ var (
 
 	//事件触发
 	caseOther = map[string][]*Matcher{
-		Join:   {},
-		Create: {},
-		Delete: {},
-		Quick:  {},
+		Join:           {},
+		Create:         {},
+		Delete:         {},
+		Quick:          {},
+		AllMessage:     {},
+		SurplusMessage: {},
 	}
 )
 

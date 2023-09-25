@@ -149,6 +149,8 @@ func process(body []byte) {
 		if ctx.sendNext() {
 			return
 		}
+		//全匹配
+		ctx.runFuncAll(AllMessage)
 		//关键词触发
 		if m, ok := caseAllWord[word]; ok {
 			if m.RulePass(ctx) {
@@ -170,6 +172,8 @@ func process(body []byte) {
 				}
 			}
 		}
+		//未匹配时触发
+		ctx.runFuncAll(SurplusMessage)
 	}
 }
 
