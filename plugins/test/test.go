@@ -19,6 +19,14 @@ func init() {
 	en.AddWord("测试").Handle(func(ctx *c.CTX) {
 		ctx.Send(c.Text("你好"), ctx.AT("76257069"), c.Link("www.baidu.com", false, "百度一下"), ctx.RoomLink("23648"), c.Text("[爱心]"))
 	})
+	en.AddWord("测试下标跳转房间").Handle(func(ctx *c.CTX) {
+		s := c.BadgeStr{
+			Icon: "http://8.134.179.136/favicon.ico",
+			Text: "10248",
+			URL:  "https://dby.miyoushe.com/chat/463/10248",
+		}
+		ctx.Send(c.Text("大别野房间~"), c.Badge(s))
+	})
 	en.AddWord("测试下标").Handle(func(ctx *c.CTX) {
 		s := c.BadgeStr{
 			Icon: "http://8.134.179.136/favicon.ico",

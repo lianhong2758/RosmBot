@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/lianhong2758/RosmBot/web"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -21,6 +22,7 @@ const (
 // 获取房间列表
 func (ctx *CTX) GetRoomList() (r *RoomList, err error) {
 	data, err := web.Web(&http.Client{}, host+getRoomListURL, http.MethodGet, ctx.makeHeard, nil)
+	log.Debugln("[GetRoomList]", string(data))
 	if err != nil {
 		return nil, err
 	}
@@ -33,6 +35,7 @@ func (ctx *CTX) GetRoomList() (r *RoomList, err error) {
 func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 	data, _ := json.Marshal(H{"uid": uid})
 	data, err = web.Web(&http.Client{}, host+getUserDataURL, http.MethodGet, ctx.makeHeard, bytes.NewReader(data))
+	log.Debugln("[GetUserData]", string(data))
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +48,7 @@ func (ctx *CTX) GetUserData(uid uint64) (r *UserData, err error) {
 func (ctx *CTX) DeleteUser(uid uint64) (err error) {
 	data, _ := json.Marshal(H{"uid": uid})
 	data, err = web.Web(&http.Client{}, host+deleteUserURL, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
+	log.Debugln("[DeleteUser]", string(data))
 	var r ApiCode
 	_ = json.Unmarshal(data, &r)
 	if r.Retcode != 0 {
@@ -57,6 +61,7 @@ func (ctx *CTX) DeleteUser(uid uint64) (err error) {
 func (ctx *CTX) Recall(msgid string, msgtime, roomid int64) (err error) {
 	data, _ := json.Marshal(H{"msg_uid": msgid, "room_id": roomid, "msg_time": msgtime})
 	data, err = web.Web(&http.Client{}, host+recallURL, http.MethodPost, ctx.makeHeard, bytes.NewReader(data))
+	log.Debugln("[Recall]", string(data))
 	var r ApiCode
 	_ = json.Unmarshal(data, &r)
 	if r.Retcode != 0 {
@@ -68,6 +73,7 @@ func (ctx *CTX) Recall(msgid string, msgtime, roomid int64) (err error) {
 // 获取别野信息
 func (ctx *CTX) GetVillaData() (r *VillaData, err error) {
 	data, err := web.Web(&http.Client{}, host+getVillaURL, http.MethodGet, ctx.makeHeard, nil)
+	log.Debugln("[GetVillaData]", string(data))
 	if err != nil {
 		return nil, err
 	}
