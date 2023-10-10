@@ -1,13 +1,13 @@
 package test
 
 import (
-	c "github.com/lianhong2758/RosmBot/ctx"
-	"github.com/lianhong2758/RosmBot/zero"
+	"github.com/lianhong2758/RosmBot-MUL/message"
+	"github.com/lianhong2758/RosmBot-MUL/rosm"
 )
 
 func init() {
-	en := c.Register(c.NewRegist("@回复", "- @机器人", ""))
-	en.AddWord("").SetBlock(true).Handle(func(ctx *c.CTX) {
-		ctx.Send(c.Text(zero.MYSconfig.BotToken.BotName, "不在呢~"))
+	en := rosm.Register(rosm.NewRegist("@回复", "- @机器人", ""))
+	en.AddWord("").SetBlock(true).Handle(func(ctx *rosm.CTX) {
+		ctx.Bot.Send(message.Text(ctx.Bot.Name(), "不在呢~"))
 	})
 }

@@ -25,7 +25,7 @@ const (
 )
 
 // 上传byte数据
-func UpImgByte(file []byte) (url string, con image.Config) {
+func UpImgByte(file []byte) (url string) {
 	// 创建一个buffer，用于构造multipart/form-data格式的表单数据
 	t := fmt.Sprintf("%d.jpg", time.Now().Unix())
 	log.Infoln("[web](upimg)FileName: ", t)
@@ -61,12 +61,11 @@ func UpImgByte(file []byte) (url string, con image.Config) {
 		log.Errorln("[upimg]", err)
 		return
 	}
-	con, _ = BytesToConfig(file)
-	return getBodyUrl(body), con
+	return getBodyUrl(body)
 }
 
 // 上传file
-func UpImgfile(filePath string) (url string, con image.Config) {
+func UpImgfile(filePath string) (url string) {
 	file, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Errorln("[upimg]", err)

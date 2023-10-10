@@ -1,12 +1,12 @@
-package ctx
+package rosm
 
 import (
 	"os"
 	"regexp"
 
 	"github.com/FloatTech/floatbox/file"
+	"github.com/lianhong2758/RosmBot-MUL/tool/rate"
 	log "github.com/sirupsen/logrus"
-	"github.com/wdvxdr1123/ZeroBot/extension/rate"
 )
 
 const (
@@ -17,6 +17,28 @@ const (
 	AllMessage     = "all"
 	SurplusMessage = "surplus"
 )
+
+type (
+	// Rule filter the event
+	Rule func(ctx *CTX) bool
+	// Handler 事件处理函数
+	Handler func(ctx *CTX)
+)
+
+type PluginData struct {
+	Help       string
+	Name       string
+	DataFolder string //"data/xxx/"+
+	Matchers   []*Matcher
+}
+type Matcher struct {
+	Word       []string
+	Rex        []*regexp.Regexp
+	rules      []Rule
+	handler    Handler
+	block      bool        //阻断
+	PluginNode *PluginData //溯源
+}
 
 // 插件注册
 var (
